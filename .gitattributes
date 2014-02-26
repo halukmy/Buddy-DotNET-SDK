@@ -1,0 +1,11 @@
+*.cs 		text diff=csharp
+*.csproj	text
+*.sln		text
+*.cshtml	text diff=html
+*.js		text diff=java
+*.sql		text diff
+
+*.png		binary
+*.dll		binary
+*.exe		binary
+*.jpg		binary

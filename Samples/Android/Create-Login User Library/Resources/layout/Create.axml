@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clulTableLayout2"
+        android:shrinkColumns="1"
+        android:stretchColumns="1">
+        <TableRow
+            android:id="@+id/clulTableRow10">
+            <TextView
+                android:text="User Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView10" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/clulCreateUserNameEditText"
+                android:layout_width="match_parent" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow11">
+            <TextView
+                android:text="Password:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView11" />
+            <EditText
+                android:inputType="textPassword"
+                android:layout_column="1"
+                android:id="@+id/clulCreatePasswordEditText" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow12">
+            <TextView
+                android:text="First Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView12" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/clulCreateFirstNameEditText" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow13">
+            <TextView
+                android:text="Last Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView13" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/clulCreateLastNameEditText" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow14">
+            <TextView
+                android:text="Email:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView14" />
+            <EditText
+                android:inputType="textEmailAddress"
+                android:layout_column="1"
+                android:id="@+id/clulCreateEmailAddressEditText" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow15">
+            <TextView
+                android:text="Gender:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView15" />
+            <Spinner
+                android:layout_column="1"
+                android:id="@+id/clulCreateGenderSpinner" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/clulTableRow16">
+            <TextView
+                android:text="Birthdate:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/clulTextView16" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="1"
+                android:id="@+id/clulCreateBirthdateTextView"
+                android:inputType="date"
+                android:editable="false"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content" />
+        </TableRow>
+    </TableLayout>
+    <Button
+        android:text="Create User"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clulCreateUserButton2"
+        android:layout_gravity="center" />
+</LinearLayout>

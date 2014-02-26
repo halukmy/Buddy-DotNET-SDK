@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="library_name">CreateLoginUserLibrary</string>
+	<string-array name="Gender">
+		<item>Not Specified</item>
+		<item>Male</item>
+		<item>Female</item>
+	</string-array>
+</resources>

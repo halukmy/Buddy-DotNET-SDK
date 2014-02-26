@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.buddy.AndroidTests">
+	<uses-sdk />
+	<application android:label="Android Tests">
+		<meta-data android:name="test application meta-data name" android:value="test application meta-data value" />
+	</application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</manifest>

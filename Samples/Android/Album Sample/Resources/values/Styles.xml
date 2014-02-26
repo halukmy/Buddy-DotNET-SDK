@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="DefaultTheme" parent="android:Theme">
+	    <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+	</style>
+
+	<style name="DefaultTextViewStyle" parent="android:Widget.TextView">
+	    <item name="android:layout_margin">5px</item>
+	    <item name="android:padding">5px</item>
+	</style>
+</resources>

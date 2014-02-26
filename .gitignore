@@ -1,0 +1,7 @@
+bin/
+obj/
+*.sln
+*.suo
+*.userprefs
+*.csproj.user
+Resource.designer.cs

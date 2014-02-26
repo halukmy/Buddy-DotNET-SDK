@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout1"
+        android:shrinkColumns="1"
+        android:stretchColumns="1">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <TextView
+                android:text="User Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView1" />
+            <TextView
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/userNameTextView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+            <TextView
+                android:text="Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView2" />
+            <TextView
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/firstLastNameTextView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3">
+            <TextView
+                android:text="Email:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView3" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="1"
+                android:id="@+id/emailAddressTextView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow4">
+            <TextView
+                android:text="Gender:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView4" />
+            <TextView
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/genderTextView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow5">
+            <TextView
+                android:text="Birthdate:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:gravity="right"
+                android:id="@+id/textView5" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="1"
+                android:id="@+id/birthdateTextView" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
