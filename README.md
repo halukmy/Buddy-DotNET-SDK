@@ -6,7 +6,6 @@ Not everything in the SDK is currently fully implemented, and not all REST endpo
 Please refer to [dev.buddyplatform.com/home/docs](http://dev.buddyplatform.com/home/docs) for more details on the SDK 
 You can also visit [preview.buddy.com](http://preview.buddy.com) for more details on the Buddy Platform Version 2 Preview Release.
 
-
 ## Introduction
 
 Buddy enables developers to build engaging, cloud-connected apps without having to write, test, manage or scale server-side code or infrastructure. We noticed that most mobile app developers end up writing the same code over and over again.  User management, photo management, geolocation checkins, metadata, and more.  
@@ -21,12 +20,11 @@ For developers the Buddy Platform offers turnkey support for features like the f
 
 * *User Accounts* - create, delete, authenticate users.
 * *Photos* - add photos, search photos, share photos with other users.
-* *GeoLocation* - checkin, search for places, list past checkins.
+* *Geolocation* - checkin, search for places, list past checkins.
 * *Push Notifications* - easily send push notifications to iOS, Android, or Microsoft devices.
 * *Messaging* - send messages to other users, create message groups.
-* *Friends* - set up social relationships between users with friends lists.
+* *User Lists* - set up relationships between users.
 * *Game Scores, Metadata, and Boards* - Keep track of game stores and states for individual users as well as across users.
-* *Commerce* - Offer items for in-app purchase via Facebook Commerce.
 * *And more* - Checkout the rest of the offering at [preview.buddy.com](http://preview.buddy.com)
 
 ## Getting Started
