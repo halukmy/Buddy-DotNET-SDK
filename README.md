@@ -3,7 +3,7 @@
 These release notes are for the 2.0 Preview release of the Buddy Platform SDK.
 Not everything in the SDK is currently fully implemented, and not all REST endpoints have yet been exposed in the SDK.
 
-Please refer to [docs.buddyplatform.com](http://docs.buddyplatform.com) for more details on the SDK 
+Please refer to [dev.buddyplatform.com/home/docs](http://dev.buddyplatform.com/home/docs) for more details on the SDK 
 You can also visit [preview.buddy.com](http://preview.buddy.com) for more details on the Buddy Platform Version 2 Preview Release.
 
 
@@ -31,13 +31,13 @@ For developers the Buddy Platform offers turnkey support for features like the f
 
 ## Getting Started
 
-To get started with the BuddyPlatform SDK, please reference the "Getting Started" series of documents at: [docs.buddyplatform.com](http://docs.buddyplatform.com)
+To get started with the BuddyPlatform SDK, please reference the "Getting Started" series of documents at: [dev.buddyplatform.com/home/docs](http://dev.buddyplatform.com/home/docs)
 
 You will need an APP ID and Key before you can use the SDK, and these documents will walk you through obtaining those and installing the SDK
 
 APP ID's and Keys can be obtained at the new Buddy Platform Dashboard [dev.buddyplatform.com](http://dev.buddyplatform.com)
 
-Full documentation for Buddy's services are also available at [docs.buddyplatform.com](http://docs.buddyplatform.com)
+Full documentation for Buddy's services are also available at [dev.buddyplatform.com/home/docs](http://dev.buddyplatform.com/home/docs)
 
 
 ## Contributing Back: Pull Requests
