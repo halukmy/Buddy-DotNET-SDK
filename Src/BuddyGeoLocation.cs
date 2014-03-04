@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace BuddySDK
 {
-    [JsonConverter(typeof(BuddyLocationGeoConverter))]
+    [JsonConverter(typeof(BuddySDK.BuddyServiceClient.BuddyLocationGeoConverter))]
     public class BuddyGeoLocation
     {
         [JsonProperty("latitude")]

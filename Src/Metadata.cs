@@ -14,21 +14,12 @@ namespace BuddySDK
     [BuddyObjectPath("/metadata")]
     public class Metadata : BuddyMetadataBase
     {
-        public Metadata()
-            : base()
-        {
-        }
+        public const string App = "app";
 
-        private string id;
-        internal Metadata(string id, BuddyClient client)
-            : base(client)
+        public Metadata(string id, BuddyClient client = null)
+            : base(id, client)
         {
-            this.id = id;
-        }
-
-        protected override string GetMetadataID()
-        {
-            return this.id;
+         
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using BuddyServiceClient;
+using BuddySDK.BuddyServiceClient;
 using System.Reflection;
 using System.Collections;
 using Newtonsoft.Json;
@@ -28,16 +28,7 @@ using System.IO;
 namespace BuddySDK
 {
 
-    /// <summary>
-    /// Represents the main class and entry point to the Buddy platform. Use this class to interact with the platform, create and login users and modify general
-    /// application level properties like Devices and Metadata.
-    /// <example>
-    /// <code>
-    ///     BuddyClient client = new BuddyClient("APPNAME", "APPPASS");
-    ///     client.PingAsync(null);
-    /// </code>
-    /// </example>
-    /// </summary>
+   
     public class BuddyClient
     {
 
@@ -269,8 +260,8 @@ namespace BuddySDK
             if (String.IsNullOrEmpty(appkey))
                 throw new ArgumentException("Can't be null or empty.", "AppKey");
 
-            this.AppId = appid;
-            this.AppKey = appkey;
+            this.AppId = appid.Trim();
+            this.AppKey = appkey.Trim();
             //this._flags = flags;
 
             _appSettings = new AppSettings (appid, appkey);
@@ -351,15 +342,14 @@ namespace BuddySDK
                     Model = PlatformAccess.Current.Model,
                     OSVersion = PlatformAccess.Current.OSVersion
                 },
-                completed: async (r1, r2) => { 
+                completed: (r1, r2) => { 
                     if (r2.IsSuccess && r2.Value.ServiceRoot != null)
                     {
-                        var service = await Service();
-                        service.ServiceRoot = r2.Value.ServiceRoot;
+                        _service.ServiceRoot = r2.Value.ServiceRoot;
                         _appSettings.ServiceUrl = r2.Value.ServiceRoot;
                     }
                     else if (!r2.IsSuccess){
-                        await ClearCredentials();
+                        ClearCredentials();
                     }
                 });
 
@@ -421,7 +411,7 @@ namespace BuddySDK
                     var ex = e.ExceptionObject as Exception;
 
                     // need to do this synchrously or the OS won't wait for us.
-                    var t = Buddy.Instance.AddCrashReportAsync (ex);
+                    var t = AddCrashReportAsync (ex);
                    
                     // wait up to a second to let it go out
                     t.Wait(TimeSpan.FromSeconds(2));
@@ -432,7 +422,7 @@ namespace BuddySDK
         }
 
     
-        internal Task<BuddyResult<T>> CallServiceMethod<T>(string verb, string path, object parameters = null, bool allowThrow = true) {
+        internal Task<BuddyResult<T>> CallServiceMethod<T>(string verb, string path, object parameters = null, bool allowThrow = false) {
 
 
             return Task.Run<BuddyResult<T>> (async () => {
@@ -531,13 +521,15 @@ namespace BuddySDK
 
      
 
-        private async Task ClearCredentials(bool clearUser = true, bool clearDevice = true) {
+        private void ClearCredentials(bool clearUser = true, bool clearDevice = true) {
 
             if (clearDevice) {
 
                 _appSettings.Clear ();
-                var service = await Service();
-                service.ServiceRoot = GetRootUrl();
+                if (_service != null)
+                {
+                    _service.ServiceRoot = GetRootUrl();
+                }
             }
 
             if (clearUser) {
@@ -573,17 +565,10 @@ namespace BuddySDK
 
                     if (e.Exception is BuddyUnauthorizedException)
                     {
-                        await ClearCredentials(true, true);
+                        ClearCredentials(true, true);
                     }
 
                 };
-
-                var token = await GetAccessToken();
-                if (token == null)
-                {
-                    throw new UnauthorizedAccessException("Failed to register device, check AppID/AppKey");
-                }
-
                 return _service;
             }
         }
@@ -614,8 +599,7 @@ namespace BuddySDK
 
 
         private async Task CheckConnectivity(TimeSpan waitTime) {
-            var service = await Service();
-            var r = await service.Client.CallServiceMethod<string>("GET", "/service/ping", allowThrow: false);
+            var r = await CallServiceMethod<string>("GET", "/service/ping");
 
             if (r != null && r.IsSuccess)
             {
@@ -668,7 +652,9 @@ namespace BuddySDK
                 client.OnAuthorizationFailure ((BuddyUnauthorizedException)buddyException);
                 return false;
             } else if (buddyException is BuddyNoInternetException) {
-                var task = OnConnectivityChanged (ConnectivityLevel.None); // We don't care about async here.
+#pragma warning disable 4014
+                OnConnectivityChanged (ConnectivityLevel.None); // We don't care about async here.
+#pragma warning restore 4014
                 return false;
             }
 
@@ -695,21 +681,21 @@ namespace BuddySDK
                 _processingAuthFailure++;
                 try {
                     bool showLoginDialog = exception == null;
-
-                    Task task;
+                    #pragma warning disable 4014
                     if (exception != null) {
                         switch (exception.Error) {
 
                         case "AuthAppCredentialsInvalid":
                         case "AuthAccessTokenInvalid":
-                            task = ClearCredentials(false, true);
+                            ClearCredentials(false, true);
                             break;
                         case "AuthUserAccessTokenRequired":
-                            task = ClearCredentials(true, false);
+                            ClearCredentials(true, false);
                             showLoginDialog = true;
                             break;
                         }
                     }
+                    #pragma warning restore 4014
 
                     if (showLoginDialog) {
                         _processingAuthFailure++;
@@ -764,11 +750,11 @@ namespace BuddySDK
         public System.Threading.Tasks.Task<BuddyResult<AuthenticatedUser>> CreateUserAsync(
             string username, 
             string password, 
-            string name = null, 
+            string firstName = null, 
+            string lastName = null,
             string email = null,
             BuddySDK.UserGender? gender = null, 
             DateTime? dateOfBirth = null, 
-            BuddySDK.UserRelationshipStatus? status = null, 
             string defaultMetadata = null)
         {
 
@@ -779,21 +765,20 @@ namespace BuddySDK
             if (dateOfBirth > DateTime.Now)
                 throw new ArgumentException("dateOfBirth must be in the past.", "dateOfBirth");
 
-            name = name ?? username;
-
+           
             var task = new Task<BuddyResult<AuthenticatedUser>>(() =>
             {
 
                 var rt = CallServiceMethod<IDictionary<string, object>>("POST", "/users", new
                 {
-                    name = name,
+                    firstName = firstName,
+                    lastName = lastName,
                     username = username,
                     password = password,
                     email = email,
                     gender = gender,
 					dateOfBirth = dateOfBirth,
-                    defaultMetadata = defaultMetadata,
-                    relationshipStatus = status
+                    defaultMetadata = defaultMetadata
                 });
 
                 var r = rt.Result;
@@ -871,7 +856,7 @@ namespace BuddySDK
             if (r.IsSuccess) {
 
                 this.User = null;
-                await ClearCredentials (true, false);
+                ClearCredentials (true, false);
               
                 if (dresult != null && dresult.ContainsKey("accessToken")) {
                     var token = dresult ["accessToken"] as string;
@@ -893,19 +878,7 @@ namespace BuddySDK
            
         }
 
-        private UserCollection _users;
-
-        public UserCollection Users
-        {
-            get
-            {
-                if (_users == null)
-                {
-                    _users = new UserCollection(this);
-                }
-                return _users;
-            }
-        }
+      
 
         private Metadata _appMetadata;
 
@@ -915,11 +888,117 @@ namespace BuddySDK
             {
                 if (_appMetadata == null)
                 {
-                    _appMetadata = new Metadata(this.AppId, this);
+                    _appMetadata = new Metadata("app", this);
                 }
                 return _appMetadata;
             }
         }
+
+        //
+        // Collections
+        //
+
+        private  CheckinCollection _checkins;
+        public  CheckinCollection Checkins
+        {
+            get
+            {
+                if (_checkins == null)
+                {
+                    _checkins = new CheckinCollection(this);
+                }
+                return _checkins;
+            }
+        }
+
+
+        private  LocationCollection _locations;
+
+        public  LocationCollection Locations
+        {
+            get
+            {
+                if (_locations == null)
+                {
+                    _locations = new LocationCollection(this);
+                }
+                return _locations;
+            }
+        }
+
+        private MessageCollection _messages;
+
+        public MessageCollection Messages
+        {
+            get
+            {
+                if (_messages == null)
+                {
+                    _messages = new MessageCollection(this);
+                }
+                return _messages;
+            }
+        }
+
+        private  PictureCollection _pictures;
+
+        public  PictureCollection Pictures
+        {
+            get
+            {
+                if (_pictures == null)
+                {
+                    _pictures = new PictureCollection(this);
+                }
+                return _pictures;
+            }
+        }
+
+        private  AlbumCollection _albums;
+
+        public  AlbumCollection Albums
+        {
+            get
+            {
+                if (_albums == null)
+                {
+                    _albums = new AlbumCollection(this);
+                }
+                return this._albums;
+            }
+        }
+
+
+        private UserCollection _users;
+
+     
+        public  UserCollection Users
+        {
+            get
+            {
+                if (_users == null)
+                {
+                    _users = new UserCollection(this);
+                }
+                return this._users;
+            }
+        }
+
+
+        private UserListCollection _userLists;
+
+        public UserListCollection UserLists
+        {
+            get
+            {
+                if (_userLists == null)
+                {
+                    _userLists = new UserListCollection(this);
+                }
+                return this._userLists;
+            }
+        }
+      
 
         //
         // Metrics

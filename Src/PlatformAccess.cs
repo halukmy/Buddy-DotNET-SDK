@@ -742,7 +742,7 @@ namespace BuddySDK
 #if WINDOWS_PHONE
             return Microsoft.Phone.Info.DeviceStatus.DeviceName;
 #else
-                return "DeviceType not found";
+            return null;
 #endif
             
             }
@@ -1012,7 +1012,14 @@ namespace BuddySDK
 #if WINDOWS_PHONE
             return IsolatedStorageFile.GetUserStoreForApplication();
 #else
-            return IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+            try
+            {
+                return IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+            }
+            catch (IsolatedStorageException)
+            {
+                return IsolatedStorageFile.GetUserStoreForDomain();
+            }
 #endif
         }
 

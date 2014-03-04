@@ -21,9 +21,9 @@ namespace BuddySDK
                         Comment = comment,
                         Description = description,
                         Location = location,
-                        DefaultMetadata = defaultMetadata
-                        //  ReadPermissions = read,
-                        //  WritePemissions = write
+                        DefaultMetadata = defaultMetadata,
+                        ReadPermissions = read,
+                        WritePermissions = write
                     };
 
                 var t = c.SaveAsync();
@@ -33,9 +33,16 @@ namespace BuddySDK
            
         }
 
-        public Task<SearchResult<Checkin>> FindAsync(string comment = null, BuddyGeoLocationRange location = null, string userId = null, int maxResults = 100) {
+        public Task<SearchResult<Checkin>> FindAsync(string comment = null, string ownerUserId = null, BuddyGeoLocationRange locationRange = null, DateRange created = null, DateRange lastModified = null, int pageSize = 100, string pagingToken = null)
+        {
 
-            return base.FindAsync (userId, null, null, location, maxResults, null, (p) => {
+            return base.FindAsync (userId: ownerUserId,
+                created: created,
+                lastModified: lastModified,
+                locationRange: locationRange,
+                pagingToken: pagingToken,
+                pageSize: pageSize,
+                parameterCallback:  (p) => {
                 p["comment"] = comment;
             });
 

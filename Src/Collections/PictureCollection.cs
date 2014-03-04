@@ -27,9 +27,9 @@ namespace BuddySDK
                         ContentType = contentType,
                         Data = pictureData,
                         Name = "data"
-                    }
-                    //  ReadPermissions = read,
-                    //  WritePemissions = write
+                    },
+                    ReadPermissions = read,
+                    WritePermissions = write
                 };
 
                 var t = c.SaveAsync();
@@ -38,14 +38,20 @@ namespace BuddySDK
             });    
         }
 
-        public Task<BuddyResult<Picture>> AddAsync(string caption, Stream pictureData, string contentType, BuddyGeoLocation location, BuddyPermissions read = BuddyPermissions.User, BuddyPermissions write = BuddyPermissions.User)
+        public Task<BuddyResult<Picture>> AddAsync(string caption, Stream pictureData, string contentType, BuddyGeoLocation location = null, BuddyPermissions read = BuddyPermissions.User, BuddyPermissions write = BuddyPermissions.User)
         {
             return PictureCollection.AddAsync(this.Client, caption, pictureData, contentType, location, read, write);
         }
 
-        public Task<SearchResult<Picture>> FindAsync(string caption = null, string contentType = null, string ownerID = null, BuddyGeoLocationRange location = null, int maxResults = 100)
+        public Task<SearchResult<Picture>> FindAsync(string caption = null, string contentType = null, string ownerUserId = null, BuddyGeoLocationRange locationRange = null, DateRange created = null, DateRange lastModified = null, int pageSize = 100, string pagingToken = null)
         {
-            return base.FindAsync(ownerID, null, null, location, maxResults, null, (p) =>
+            return base.FindAsync(userId: ownerUserId,
+                created: created,
+                lastModified: lastModified,
+                locationRange: locationRange,
+                pagingToken: pagingToken,
+                pageSize: pageSize,
+                parameterCallback: (p) =>
             {
                 p["caption"] = caption;
                 p["contentType"] = contentType;

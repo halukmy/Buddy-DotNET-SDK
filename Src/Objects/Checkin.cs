@@ -44,26 +44,18 @@ namespace BuddySDK
         }
 
 
-        public Checkin()
+        internal Checkin(BuddyClient client = null) : base(client)
         {
 
         }
        
-        public Checkin(string id= null, BuddyClient client = null)
+        public Checkin(string id, BuddyClient client = null)
             : base(id, client)
         {
 
         }
 
-        protected override void SetValueCore<T> (string key, T value)
-        {
-//            if (key == "Location" && !(value is BuddyGeoLocation)) {
-//
-//                value = (T)(object) JsonConvert.DeserializeObject<BuddyCheckinLocation>(value.ToString());
-//            }
-
-            base.SetValueCore (key, value);
-        }
+   
 
         public override Task<BuddyResult<bool>> SaveAsync()
         {

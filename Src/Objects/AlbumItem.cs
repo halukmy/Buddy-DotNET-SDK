@@ -14,8 +14,8 @@ namespace BuddySDK
     [BuddyObjectPath("/items")]
 	public class AlbumItem : BuddyBase
 	{
-        public AlbumItem()
-            : base()
+        internal AlbumItem(BuddyClient client = null)
+            : base(client)
         {
         }
 
@@ -76,21 +76,5 @@ namespace BuddySDK
 		}
 	}
 
-    public class AlbumItemCollection : BuddyCollectionBase<AlbumItem>
-    {
-		internal AlbumItemCollection(string parentObjectPath, BuddyClient client)
-			: base(parentObjectPath + typeof(AlbumItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, client)
-        {
-        }
-
-        public Task<SearchResult<AlbumItem>> FindAsync(AlbumItemType? itemType = null, string caption = null,
-            BuddyGeoLocationRange location = null, int maxResults = 100, string pagingToken = null)
-        {
-            return base.FindAsync(null, null, null, location, maxResults, pagingToken, (p) =>
-            {
-                if (itemType.HasValue) { p["itemType"] = itemType; }
-                p["caption"] = caption;
-            });
-        }
-    }
+   
 }

@@ -1,4 +1,5 @@
-﻿using BuddyServiceClient;
+﻿
+using BuddySDK.BuddyServiceClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -49,11 +50,11 @@ namespace BuddySDK
             }
         }
 
-        public Picture()
+        internal Picture(BuddyClient client = null) : base(client)
         {
         }
 
-        public Picture(string id = null, BuddyClient client = null)
+        public Picture(string id, BuddyClient client = null)
             : base(id, client)
         {
         }
