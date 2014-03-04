@@ -6,8 +6,8 @@ namespace BuddySDK
     [BuddyObjectPath("/items")]
     public class UserListItem : BuddyBase
     {
-        public UserListItem()
-            : base()
+        internal UserListItem(BuddyClient client = null)
+            : base(client)
         {
         }
 
@@ -41,18 +41,5 @@ namespace BuddySDK
         }
     }
 
-    public class UserListItemCollection : BuddyCollectionBase<UserListItem>
-    {
-        internal UserListItemCollection(string parentObjectPath, BuddyClient client)
-            : base(parentObjectPath + typeof(UserListItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, client)
-        {
-        }
-
-        public Task<SearchResult<UserListItem>> FindAsync(BuddyGeoLocationRange location = null, int maxResults = 100, string pagingToken = null)
-        {
-            return base.FindAsync(null, null, null, location, maxResults, pagingToken, (p) =>
-            {
-            });
-        }
-    }
+   
 }

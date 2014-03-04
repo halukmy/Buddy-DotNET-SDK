@@ -13,172 +13,10 @@ using System.Threading.Tasks;
 
 namespace BuddySDK
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class BuddyObjectPathAttribute : Attribute
-    {
-        public string Path { get; set; }
-        public BuddyObjectPathAttribute(string path)
-        {
-            if (String.IsNullOrEmpty(path)) throw new ArgumentNullException("path");
-            this.Path = path;
-        }
-    }
+   
 
-    public class BuddyLocationGeoConverter : JsonConverter {
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(string);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var obj = (JObject)serializer.Deserialize(reader);
-            return new BuddyGeoLocation()
-            {
-                Latitude = (double)obj.Property("latitude").Value,
-                Longitude = (double)obj.Property("longitude").Value
-            };
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            BuddyGeoLocation bcl = (BuddyGeoLocation)value;
-
-            if (bcl.LocationID == null)
-            {
-                writer.WriteValue(String.Format("{0},{1}", bcl.Latitude, bcl.Longitude));
-            }
-            else
-            {
-                writer.WriteValue(String.Format("{0}", bcl.LocationID));
-            }
-        }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum BuddyPermissions
-    {
-        App,
-        User,
-        Default = User
-    }
-
-    public abstract class BuddyMetadataBase
-    {
-        private BuddyClient _client;
-        protected BuddyClient Client
-        {
-            get
-            {
-                return _client ?? Buddy.Instance;
-            }
-        }
-
-        protected BuddyMetadataBase(BuddyClient client = null)
-        {
-            if (client != null)
-            {
-                this._client = client;
-            }
-        }
-
-        private string GetMetadataPath(string key = null)
-        {
-            var path = string.Format("/metadata/{0}", GetMetadataID());
-
-            if (!string.IsNullOrEmpty(key))
-            {
-                path += string.Format("/{0}", key);
-            }
-
-            return path;
-        }
-
-        protected abstract string GetMetadataID();
-
-        private Task<BuddyResult<bool>> SetMetadataCore(string key, object value, BuddyPermissions permissions)
-        {
-            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(key), new
-                {
-                    value = value,
-                    permissions = permissions
-                });
-        }
-
-        private Task<BuddyResult<bool>> SetMetadataCore(IDictionary keyValuePairs, BuddyPermissions permissions)
-        {
-            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(), new
-                {
-                    keyValuePairs = keyValuePairs,
-                    permissions = permissions
-                });
-        }
-
-        public Task<BuddyResult<bool>> SetMetadataAsync(string key, string value, BuddyPermissions permissions = BuddyPermissions.Default)
-        {
-            return SetMetadataCore(key, value, permissions);
-        }
-
-        public Task<BuddyResult<bool>> SetMetadataAsync(string key, int value, BuddyPermissions permissions = BuddyPermissions.Default)
-        {
-            return SetMetadataCore(key, value, permissions);
-        }
-
-        public Task<BuddyResult<bool>> SetMetadataAsync(IDictionary<string, string> keyValues, BuddyPermissions permissions = BuddyPermissions.Default)
-        {
-            return SetMetadataCore((IDictionary)keyValues, permissions);
-        }
-
-        public Task<BuddyResult<bool>> SetMetadataAsync(IDictionary<string, int> keyValues, BuddyPermissions permissions = BuddyPermissions.Default)
-        {
-            return SetMetadataCore((IDictionary)keyValues, permissions);
-        }
-
-        public Task<BuddyResult<int>> GetMetadataIntAsync(string key)
-        {
-            return GetMetatadataCore<int>(key);
-        }
-
-        public Task<BuddyResult<string>> GetMetadataStringAsync(string key)
-        {
-            return GetMetatadataCore<string>(key);
-        }
-
-        private Task<BuddyResult<T>> GetMetatadataCore<T>(string key)
-        {
-            return Task.Run<BuddyResult<T>>(() =>
-            {
-                return Client.CallServiceMethod<MetadataItem>("GET", GetMetadataPath(key)).Result.Convert<T>(mdi => (T)mdi.Value);
-            });
-        }
-
-        public Task<BuddyResult<MetadataItem>> GetMetadataAsync(string key)
-        {
-            return GetMetatadataCore<MetadataItem>(key);
-        }
-
-        public Task<BuddyResult<int>> IncrementMetadataAsync(string key, int delta)
-        {
-            var path = GetMetadataPath(key) + "/increment";
-
-            var r = Client.CallServiceMethod<int>("POST", path,
-                     new
-                     {
-                         delta = delta
-                     });
-
-            return r;
-        }
-
-        public Task<BuddyResult<bool>> DeleteMetadataAsync(string key)
-        {
-            var t = Client.CallServiceMethod<bool>("DELETE", GetMetadataPath(key));
-
-            return t;
-        }
-    }
-
+  
+   
 
     public abstract class BuddyBase : BuddyMetadataBase, System.ComponentModel.INotifyPropertyChanged
     {
@@ -217,6 +55,14 @@ namespace BuddySDK
         public bool IsPopulated {
             get;
             private set;
+        }
+
+        protected override string MetadataID
+        {
+            get
+            {
+                return this.ID;
+            }
         }
 
         [JsonProperty("id")]
@@ -300,8 +146,6 @@ namespace BuddySDK
             }
         }
 
-
-
         protected virtual string Path
         {
             get
@@ -315,15 +159,16 @@ namespace BuddySDK
             }
         }
 
-        protected BuddyBase(BuddyClient client)
-            : base(client)
+        protected BuddyBase(BuddyClient client) : base(null, client)
         {
             EnsureMappings(this);
         }
 
-        protected BuddyBase(string id = null, BuddyClient client = null)
-            : this(client)
+        protected BuddyBase(string id, BuddyClient client)
+            : base(id, client)
         {
+            EnsureMappings(this);
+
             if (id != null)
             {
                 SetValue<string>("ID", id);
@@ -362,10 +207,7 @@ namespace BuddySDK
             return String.Format("{0}/{1}", Path, ID);
         }
 
-        protected override string GetMetadataID()
-        {
-            return ID;
-        }
+       
 
         private Task<BuddyResult<bool>> _pendingRefresh;
         public virtual async Task<BuddyResult<bool>> FetchAsync(Action updateComplete = null)
@@ -596,12 +438,12 @@ namespace BuddySDK
 
                     if (updateDict != null)
                     {
-                        var service = Client.Service();
-						service.Wait();
-						service.Result.CallOnUiThread(() =>
+
+                        PlatformAccess.Current.InvokeOnUiThread(() =>
                         {
                             Update(updateDict);
                         });
+                       
                     }
 
                     return new BuddyResult<bool>

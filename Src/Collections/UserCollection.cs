@@ -12,6 +12,26 @@ namespace BuddySDK
         {
         }
 
+        public Task<SearchResult<User>> FindAsync(string userName = null, string email = null, string firstName = null, string lastName = null, BuddyGeoLocationRange locationRange = null, DateRange created = null, DateRange lastModified = null, int pageSize = 100, string pagingToken = null)
+        {
+
+            return base.FindAsync(userId: null,
+                created: created,
+                lastModified: lastModified,
+                locationRange: locationRange,
+                pagingToken: pagingToken,
+                pageSize: pageSize,
+                parameterCallback: (p) =>
+                {
+                    p["username"] = userName;
+                    p["email"] = email;
+                    p["firstName"] = firstName;
+                    p["lastName"] = lastName;
+
+                });
+
+        } 
+
         public Task<BuddyResult<IEnumerable<User>>> FindByIdentitiesAsync(string identityProviderName, IEnumerable<string> identityIDs = null)
         {
             return Task.Run<BuddyResult<IEnumerable<User>>>(() =>

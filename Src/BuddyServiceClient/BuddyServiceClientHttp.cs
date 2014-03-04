@@ -12,10 +12,9 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace BuddyServiceClient
+namespace BuddySDK.BuddyServiceClient
 {
   
-
      internal class BuddyServiceClientHttp :BuddyServiceClientBase
      {
          
@@ -167,7 +166,9 @@ namespace BuddyServiceClient
                
                 bcr.Error = err;
                 LogResponse(verb + " " + path, bcr.Message,DateTime.Now.Subtract(start), response);
-                  
+
+
+                OnServiceException(ex);
                 callback(bcr);
             };
 

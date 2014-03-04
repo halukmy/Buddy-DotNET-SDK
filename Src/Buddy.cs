@@ -12,6 +12,7 @@ namespace BuddySDK
     {
         AutoTrackLocation =  0x00000001,
         AutoCrashReport =    0x00000002,
+        AllowReinitialize =  0x00000004,
         Default = AutoCrashReport | AutoTrackLocation
     }
 
@@ -115,16 +116,17 @@ namespace BuddySDK
 
         public static void Init(string appId, string appKey, BuddyClientFlags flags = BuddyClientFlags.Default)
         {
-            if (_creds != null)
+            if (_creds != null && !flags.HasFlag(BuddyClientFlags.AllowReinitialize))
             {
                 throw new InvalidOperationException("Already initalized.");
             }
             _creds = new Tuple<string, string, BuddyClientFlags>(appId, appKey, flags);
 
+            _client = null;
         }
 
-        public static Task<BuddyResult<AuthenticatedUser>> CreateUserAsync(string username, string password, string name = null, string email = null, UserGender? gender = null, DateTime? dateOfBirth = null, string defaultMetadata = null) {
-            return Instance.CreateUserAsync (username, password, name, email, gender, dateOfBirth, defaultMetadata : defaultMetadata);
+        public static Task<BuddyResult<AuthenticatedUser>> CreateUserAsync(string username, string password, string firstName = null, string lastName = null, string email = null, UserGender? gender = null, DateTime? dateOfBirth = null, string defaultMetadata = null) {
+            return Instance.CreateUserAsync (username, password, firstName, lastName, email, gender, dateOfBirth, defaultMetadata : defaultMetadata);
         }
 
         public static Task<BuddyResult<AuthenticatedUser>> LoginUserAsync(string username, string password)
@@ -164,78 +166,77 @@ namespace BuddySDK
         }
 
         // 
+        // Objects
+        //
+        public static Metadata AppMetadata
+        {
+            get
+            {
+                return Instance.AppMetadata;
+            }
+        }
+
+        // 
         // Collections.
         //
 
-        private static CheckinCollection _checkins;
         public static CheckinCollection Checkins
         {
             get
             {
-                if (_checkins == null)
-                {
-                    _checkins = new CheckinCollection(Instance);
-                }
-                return _checkins;
+               
+                return Instance.Checkins;
             }
         }
 
-
-        private static LocationCollection _locations;
 
         public static LocationCollection Locations
         {
             get
             {
-                if (_locations == null)
-                {
-                    _locations = new LocationCollection(Instance);
-                }
-                return _locations;
+                
+                return Instance.Locations;
             }
         }
 
-        private static PictureCollection _pictures;
-
+        public static MessageCollection Messages
+        {
+            get
+            {
+                return Instance.Messages;
+            }
+        }
+      
         public static PictureCollection Pictures
         {
             get
             {
-                if (_pictures == null)
-                {
-                    _pictures = new PictureCollection(Instance);
-                }
-                return _pictures;
+              
+                return Instance.Pictures;
             }
         }
-
-        private static AlbumCollection _albums;
 
         public static AlbumCollection Albums
         {
             get
             {
-                if (_albums == null)
-                {
-                    _albums = new AlbumCollection(Instance);
-                }
-
-                return _albums;
+                return Instance.Albums;
             }
         }
 
-
-        private static UserListCollection _userLists;
+        public static UserCollection Users
+        {
+            get
+            {
+                return Instance.Users;
+            }
+        }
 
         public static UserListCollection UserLists
         {
             get
             {
-                if (_userLists == null)
-                {
-                    _userLists = new UserListCollection(Instance);
-                }
-                return _userLists;
+                return Instance.UserLists;
             }
         }
       

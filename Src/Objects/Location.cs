@@ -178,7 +178,7 @@ namespace BuddySDK
             }
         }
 
-        public Location()
+        internal Location(BuddyClient client = null) : base(client)
         {
         }
 

@@ -16,20 +16,7 @@ namespace BuddySDK
         Female
     }
 
-    /// <summary>
-    /// Represents the status of the user.
-    /// </summary>
-    public enum UserRelationshipStatus
-    {
-		Unknown = 0,
-        Single = 1,
-        Dating = 2,
-        Engaged = 3,
-        Married = 4,
-        Divorced = 5,
-        Widowed = 6,
-        OnTheProwl = 7
-    }
+  
 
     /// <summary>
     /// Represents a public user profile. Public user profiles are usually returned when looking at an AuthenticatedUser's friends or making a search with FindUser.
@@ -88,9 +75,24 @@ namespace BuddySDK
             }
             
         }
+
+        [JsonProperty("email")]
+        public string Email
+        {
+            get
+            {
+                return GetValueOrDefault<string>("Email");
+            }
+            set
+            {
+                SetValue<string>("Email", value, checkIsProp: false);
+            }
+
+        }
         /// <summary>
         /// Gets the gender of the user.
         /// </summary>
+        [JsonProperty("gender")]
         public UserGender? Gender
         {
             get
@@ -102,8 +104,8 @@ namespace BuddySDK
                 SetValue<UserGender?>("Gender", value, checkIsProp: false);
             }
         }
-      
 
+        [JsonProperty("dateOfBirth")]
         public DateTime? DateOfBirth
         {
             get
@@ -171,7 +173,7 @@ namespace BuddySDK
             }
         }
 
-        public User()
+        internal User(BuddyClient client = null): base(client)
         {
         }
 

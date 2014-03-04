@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace BuddySDK
 {
-    public abstract class BuddyCollectionBase<T> where T: BuddyBase, new()
+    public abstract class BuddyCollectionBase<T> where T: BuddyBase
     {
         private BuddyClient _client;
         private string _path;
@@ -52,18 +52,21 @@ namespace BuddySDK
 
         protected Task<SearchResult<T>> FindAsync(
             string userId = null,
-            DateTime? startDate = null, 
-            DateTime? endDate = null, 
-            BuddyGeoLocationRange location = null, int maxItems = 100, string pagingToken = null, Action<IDictionary<string, object>> parameterCallback = null)
+            BuddyGeoLocationRange locationRange = null, 
+            DateRange created = null, 
+            DateRange lastModified = null, 
+            int pageSize = 100, 
+            string pagingToken = null, 
+            Action<IDictionary<string, object>> parameterCallback = null)
         {
-            Task<SearchResult<T>> t = new Task<SearchResult<T>>(() =>
+            return Task.Run<SearchResult<T>>(() =>
             {
                     IDictionary<string,object> obj = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase){
                         {"userID", userId},
-                        {"startDate", startDate},
-                        {"endDate", endDate},
-                        {"location", location},
-                        {"limit", maxItems}
+                        {"created", created},
+                        {"lastModified", lastModified},
+                        {"locationRange", locationRange},
+                        {"limit", pageSize}
                     };
 
                     if (pagingToken != null) {
@@ -108,8 +111,7 @@ namespace BuddySDK
                     }
                     return sr;
             });
-            t.Start();
-            return t;
+           
         }
     }
 }

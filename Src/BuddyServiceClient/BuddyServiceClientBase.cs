@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace BuddyServiceClient
+namespace BuddySDK.BuddyServiceClient
 {
     public class BuddyCallResult<T>
     {
@@ -160,6 +160,16 @@ namespace BuddyServiceClient
                 // TODO: should we be doing this here, or should setters be changed to not pass in trailing slashes?
 
                 serviceRoot = value == null ? null : value.TrimEnd('/');
+            }
+        }
+
+        protected virtual void OnServiceException(Exception ex)
+        {
+
+            if (ServiceException != null)
+            {
+                var args = new ExceptionEventArgs(ex);
+                ServiceException(this, args);
             }
         }
     }

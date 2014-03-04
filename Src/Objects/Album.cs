@@ -7,13 +7,13 @@ namespace BuddySDK
     [BuddyObjectPath("/albums")]
 	public class Album : BuddyBase
 	{
-        public Album()
-            : base()
+        internal Album(BuddyClient client = null)
+            : base(client)
         {
         }
 
-		public Album(BuddyClient client)
-			: base(client)
+		public Album(string id, BuddyClient client= null)
+			: base(id, client)
 		{
 		}
 
@@ -74,43 +74,5 @@ namespace BuddySDK
 		}
 	}
 
-    public class AlbumCollection : BuddyCollectionBase<Album>
-    {
-        public AlbumCollection()
-            : base()
-        {
-        }
-
-        internal AlbumCollection(BuddyClient client)
-            : base(null, client)
-        {
-        }
-
-        public async Task<BuddyResult<Album>> AddAsync(string name, string caption,
-            BuddyGeoLocation location, string defaultMetadata = null, BuddyPermissions readPermissions = BuddyPermissions.User, BuddyPermissions writePermissions = BuddyPermissions.User)
-        {
-            var c = new Album(this.Client)
-            {
-                Name = name,
-                Caption = caption,
-                Location = location,
-                DefaultMetadata = defaultMetadata,
-                ReadPermissions = readPermissions,
-                WritePermissions = writePermissions
-            };
-
-            var r = await c.SaveAsync();
-            return r.Convert (b => c);
-        }
-
-        public Task<SearchResult<Album>> FindAsync(string name = null, string caption = null,
-            BuddyGeoLocationRange location = null, int maxResults = 100, string pagingToken = null)
-        {
-            return base.FindAsync(null, null, null, location, maxResults, pagingToken, (p) =>
-            {
-                p["name"] = name;
-                p["caption"] = caption;
-            });
-        }
-    }
+   
 }

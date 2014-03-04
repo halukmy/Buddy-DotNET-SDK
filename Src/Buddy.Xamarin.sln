@@ -1,0 +1,67 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buddy.iOS", "Buddy.iOS.csproj", "{6CDE8A47-1F4D-489D-B06B-7C334C76886A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buddy.Android", "Buddy.Android.csproj", "{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buddy.Net45", "Buddy.Net45.csproj", "{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Release-US|Any CPU = Release-US|Any CPU
+		Release-EUR|Any CPU = Release-EUR|Any CPU
+		Debug-EUR|Any CPU = Debug-EUR|Any CPU
+		Debug-US|Any CPU = Debug-US|Any CPU
+		Staging|Any CPU = Staging|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug-EUR|Any CPU.ActiveCfg = Debug-EUR|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug-EUR|Any CPU.Build.0 = Debug-EUR|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug-US|Any CPU.ActiveCfg = Debug-US|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Debug-US|Any CPU.Build.0 = Debug-US|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release-EUR|Any CPU.ActiveCfg = Release-EUR|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release-EUR|Any CPU.Build.0 = Release-EUR|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release-US|Any CPU.ActiveCfg = Release-US|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Release-US|Any CPU.Build.0 = Release-US|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
+		{20ED7BC7-5C2F-4E5F-8A0F-34B86984082A}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug-EUR|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug-EUR|Any CPU.Build.0 = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug-US|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Debug-US|Any CPU.Build.0 = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release-EUR|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release-EUR|Any CPU.Build.0 = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release-US|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Release-US|Any CPU.Build.0 = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}.Staging|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug-EUR|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug-EUR|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug-US|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Debug-US|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release-EUR|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release-EUR|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release-US|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Release-US|Any CPU.Build.0 = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDE8A47-1F4D-489D-B06B-7C334C76886A}.Staging|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Buddy.iOS.csproj
+	EndGlobalSection
+EndGlobal
