@@ -337,13 +337,13 @@ namespace BuddySDK.BuddyServiceClient
                 path = "/" + path;
             }
 
+            // get the token before generating the request url, as there may be a new ServiceRoot
+            var token = await Client.GetAccessToken();
+
             var url = String.Format("{0}{1}", ServiceRoot, path);
             var requestType = HttpRequestType.HttpPostJson;
             IEnumerable<KeyValuePair<string, object>> files = null;
-
-            var token = await Client.GetAccessToken ();
-
-           
+         
             switch (verb.ToUpperInvariant())
             {
             case "GET":

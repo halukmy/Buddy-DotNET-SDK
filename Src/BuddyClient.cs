@@ -410,7 +410,7 @@ namespace BuddySDK
                 AppDomain.CurrentDomain.UnhandledException += (sender, e) => {
                     var ex = e.ExceptionObject as Exception;
 
-                    // need to do this synchrously or the OS won't wait for us.
+                    // need to do this synchronously or the OS won't wait for us.
                     var t = AddCrashReportAsync (ex);
                    
                     // wait up to a second to let it go out
