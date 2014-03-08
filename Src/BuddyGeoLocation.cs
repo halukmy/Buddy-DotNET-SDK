@@ -6,10 +6,10 @@ namespace BuddySDK
     [JsonConverter(typeof(BuddySDK.BuddyServiceClient.BuddyLocationGeoConverter))]
     public class BuddyGeoLocation
     {
-        [JsonProperty("latitude")]
+		[JsonProperty("lat")]
         public double Latitude { get; set; }
 
-        [JsonProperty("longitude")]
+		[JsonProperty("lng")]
         public double Longitude { get; set; }
 
         public string LocationID { get; private set; }
