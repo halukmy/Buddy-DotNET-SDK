@@ -44,7 +44,7 @@ namespace CreateLoginUserLibrary
 
 				try {
 					await Buddy.CreateUserAsync(_userNameEditText.Text,
-							_passwordEditText.Text, _firstNameEditText.Text + " " + _lastNameEditText.Text, 
+						_passwordEditText.Text, _firstNameEditText.Text, _lastNameEditText.Text, 
 							_emailAddressEditText.Text,
 						GetGenderSpinnerValue(), DateTime.Parse(_birthdateTextView.Text).ToUniversalTime());
 
