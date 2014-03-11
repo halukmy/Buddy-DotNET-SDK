@@ -360,6 +360,21 @@ namespace BuddySDK
             return dr.Value.AccessToken;
         }
 
+
+
+        public async Task<bool> UpdateDevice(string devicePushToken, bool isProduction = true)
+        {
+            BuddyResult<IDictionary<string, object>> result = await CallServiceMethodHelper<IDictionary<string, object>, IDictionary<string, object>>(
+                "PATCH",
+                "/devices/current",
+                new
+                {
+                    PushToken = devicePushToken,
+                    IsProduction = isProduction
+                });
+            return result.IsSuccess;
+        }
+
         private AuthenticatedUser GetUser() {
 
 
