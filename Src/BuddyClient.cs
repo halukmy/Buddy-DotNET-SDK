@@ -500,40 +500,51 @@ namespace BuddySDK
         }
 
 
-        internal async Task<BuddyResult<T2>> CallServiceMethodHelper<T1, T2>(
+        internal Task<BuddyResult<T2>> CallServiceMethodHelper<T1, T2>(
             string verb, 
             string path, 
             object parameters = null, 
             Func<T1, T2> map = null, 
             Action<BuddyResult<T1>, BuddyResult<T2>> completed = null) {
 
-            BuddyResult<T1> r1 = null;
-            BuddyResult<T2> r2 = null;
+            BuddyResult<T1> r1Result = null;
+            Task<BuddyResult<T2>> task;
 
             if (typeof(T1) == typeof(T2)) {
-                r2 = await CallServiceMethod<T2> (verb, path, parameters);
+                task = CallServiceMethod<T2>(verb, path, parameters);
             } else {
-                r1 = await CallServiceMethod<T1> (verb, path, parameters);
+                task = CallServiceMethod<T1>(verb, path, parameters).ContinueWith<BuddyResult<T2>>(r1 =>
+                {
+                    r1Result = r1.Result;
 
-               
-                if (map == null) {
-                    map = (t1) => {
-                        return (T2)(object)r1.Value;
-                    };
-                }
+                    if (map == null)
+                    {
+                        map = (t1) =>
+                        {
+                            return (T2)(object)t1;
+                        };
+                    }
 
-                r2 = r1.Convert<T2> (map);
-
+                    return r1Result.Convert<T2>(map);
+                });
             }
 
-            if (completed != null) {
-                PlatformAccess.Current.InvokeOnUiThread (() => completed (r1, r2));
-            }
-            return r2;
+            var tcs = new TaskCompletionSource<BuddyResult<T2>>();
+
+            task.ContinueWith(r2 =>
+                {
+                    if (completed == null)
+                    {
+                        tcs.SetResult(r2.Result);
+                    }
+                    else
+                    {
+                        PlatformAccess.Current.InvokeOnUiThread(() => { completed(r1Result, r2.Result); tcs.SetResult(r2.Result); });
+                    }
+                });
+
+            return tcs.Task;
         }
-
-      
-
      
 
         private void ClearCredentials(bool clearUser = true, bool clearDevice = true) {
