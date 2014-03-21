@@ -21,8 +21,8 @@ namespace BuddySDK.BuddyServiceClient
             var obj = (JObject)serializer.Deserialize(reader);
             return new BuddyGeoLocation()
             {
-                Latitude = (double)obj.Property("latitude").Value,
-                Longitude = (double)obj.Property("longitude").Value
+				Latitude = (double)obj.Property("lat").Value,
+				Longitude = (double)obj.Property("lng").Value
             };
         }
 
