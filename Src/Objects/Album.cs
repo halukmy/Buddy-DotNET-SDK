@@ -57,7 +57,7 @@ namespace BuddySDK
             }
         }
 		
-        public async Task<AlbumItem> AddItemAsync(string itemId, string caption, BuddyGeoLocation location, string defaultMetadata = null)
+        public async Task<AlbumItem> AddItemAsync(string itemId, string caption, BuddyGeoLocation location, string tag = null)
 		{
 	
 			var c = new AlbumItem(this.GetObjectPath() + typeof(AlbumItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, this.Client)
@@ -65,7 +65,7 @@ namespace BuddySDK
 				ItemId = itemId,
                 Caption = caption,
 				Location = location,
-				DefaultMetadata = defaultMetadata
+				Tag = tag
 			};
 
             var r = await c.SaveAsync();

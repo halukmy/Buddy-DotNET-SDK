@@ -44,13 +44,13 @@ namespace BuddySDK
             }
         }
 
-        public async Task<UserListItem> AddUserAsync(User user, BuddyGeoLocation location, string defaultMetadata = null)
+        public async Task<UserListItem> AddUserAsync(User user, BuddyGeoLocation location, string tag = null)
         {
             var c = new UserListItem(this.GetObjectPath() + typeof(UserListItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, this.Client)
             {
                 UserID = user.ID,
                 Location = location,
-                DefaultMetadata = defaultMetadata
+                Tag = tag
             };
 
             var r = await c.SaveAsync();

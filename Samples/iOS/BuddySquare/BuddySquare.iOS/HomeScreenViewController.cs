@@ -333,9 +333,9 @@ namespace BuddySquare.iOS
 
                 // if we have metadata, it's the associated photo ID
                 //
-                if (ci.Checkin.DefaultMetadata != null) {
+                if (ci.Checkin.Tag != null) {
 
-                    LoadPhoto (ci.Checkin.DefaultMetadata, indexPath, cell.ImageView);
+                    LoadPhoto (ci.Checkin.Tag, indexPath, cell.ImageView);
 
 
                 } else {
@@ -367,8 +367,8 @@ namespace BuddySquare.iOS
 
                     // do we have a photo?
                     //
-                    if (ci.Checkin.DefaultMetadata != null) {
-						var p = new Picture (ci.Checkin.DefaultMetadata);
+                    if (ci.Checkin.Tag != null) {
+                        var p = new Picture (ci.Checkin.Tag);
                         await p.DeleteAsync ();
                     }
 

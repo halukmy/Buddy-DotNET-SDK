@@ -134,15 +134,15 @@ namespace BuddySDK
             }
         }
 
-        [JsonProperty("defaultMetadata")]
-        public string DefaultMetadata { 
+        [JsonProperty("tag")]
+        public string Tag { 
 
             get {
-                return GetValueOrDefault<string>("DefaultMetadata");
+                return GetValueOrDefault<string>("Tag");
             }
             set
             {
-                SetValue<string>("DefaultMetadata", value, checkIsProp:false);
+                SetValue<string>("Tag", value, checkIsProp:false);
             }
         }
 

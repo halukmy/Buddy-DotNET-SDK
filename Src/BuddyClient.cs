@@ -770,7 +770,7 @@ namespace BuddySDK
             string email = null,
             BuddySDK.UserGender? gender = null, 
             DateTime? dateOfBirth = null, 
-            string defaultMetadata = null)
+            string tag = null)
         {
 
             if (String.IsNullOrEmpty(username))
@@ -793,7 +793,7 @@ namespace BuddySDK
                     email = email,
                     gender = gender,
 					dateOfBirth = dateOfBirth,
-                    defaultMetadata = defaultMetadata
+                    tag = tag
                 });
 
                 var r = rt.Result;
