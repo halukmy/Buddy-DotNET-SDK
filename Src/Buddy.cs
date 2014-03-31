@@ -125,8 +125,8 @@ namespace BuddySDK
             _client = null;
         }
 
-        public static Task<BuddyResult<AuthenticatedUser>> CreateUserAsync(string username, string password, string firstName = null, string lastName = null, string email = null, UserGender? gender = null, DateTime? dateOfBirth = null, string defaultMetadata = null) {
-            return Instance.CreateUserAsync (username, password, firstName, lastName, email, gender, dateOfBirth, defaultMetadata : defaultMetadata);
+        public static Task<BuddyResult<AuthenticatedUser>> CreateUserAsync(string username, string password, string firstName = null, string lastName = null, string email = null, UserGender? gender = null, DateTime? dateOfBirth = null, string tag = null) {
+            return Instance.CreateUserAsync (username, password, firstName, lastName, email, gender, dateOfBirth, tag : tag);
         }
 
         public static Task<BuddyResult<AuthenticatedUser>> LoginUserAsync(string username, string password)

@@ -91,9 +91,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="Buddy">
-      <HintPath>libs\Buddy.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -127,5 +124,11 @@
     <InterfaceDefinition Include="LoginViewController.xib" />
     <InterfaceDefinition Include="AddCheckinViewController.xib" />
     <InterfaceDefinition Include="LoadingViewController.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Src\Buddy.iOS.csproj">
+      <Project>{6CDE8A47-1F4D-489D-B06B-7C334C76886A}</Project>
+      <Name>Buddy.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
