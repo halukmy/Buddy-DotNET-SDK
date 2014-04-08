@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Linq;
-
-
+using System.Threading.Tasks;
 
 #if __ANDROID__
 using Android.App;
@@ -35,8 +34,8 @@ namespace BuddySDK
     public abstract class PlatformAccess
     {
         private int? _uiThreadId;
-
-
+        protected const string PushChannelName = "BuddyChannel";
+        protected const string PushChannelSettingName = "PushChannelUri";
 
         // device info
         //
@@ -150,6 +149,7 @@ namespace BuddySDK
             }
         }
 
+
         // 
         // Location
         //
@@ -209,8 +209,12 @@ namespace BuddySDK
             }
         }
         
+        // Push identifiers
 
-
+        public abstract void RegisterForPushToast(Action<string,string> pushTokenCallback);
+        public abstract void RegisterForPushAlert(Action<string,string> pushTokenCallback);
+        public abstract void RegisterForPushBadge(Action<string,string> pushTokenCallback);
+        public abstract void RegisterForRawPush(Action<string,string> pushTokenCallback,Action<string>pushRecievedCallback);
 
         static PlatformAccess   _current;
         public static PlatformAccess Current {
@@ -381,6 +385,26 @@ namespace BuddySDK
             // currently not implemneted because of how Android location works.
             // The location service is attached to the Activity Context, it doesn't look
             // like we can access it -- need to work out a plan here.
+        }
+
+        public override void RegisterForPushBadge(Action<string, string> pushTokenCallback){
+            //need to integrate with Xamarin component for Google Play services before we can integrate with this 
+        }
+
+        public override void RegisterForPushAlert (Action<string, string> pushTokenCallback)
+        {
+            //need to integrate with Xamarin component for Google Play services before we can integrate with this
+        }
+
+        public override void RegisterForPushToast (Action<string, string> pushTokenCallback)
+        {
+            //need to integrate with Xamarin component for Google Play services before we can integrate with this
+        }
+
+        public override void RegisterForRawPush (Action<string, string> pushTokenCallback, Action<string> pushRecievedCallback)
+        {
+            //need to integrate with Xamarin component for Google Play services before we can integrate with this
+
         }
     }
 
@@ -706,6 +730,26 @@ namespace BuddySDK
                     throw new NotSupportedException ();
                 }
             }
+        }
+
+        public override void RegisterForPushAlert (Action<string, string> pushTokenCallback)
+        {
+            // @TODO Implement this for .NET iOS
+        }
+
+        public override void RegisterForPushBadge (Action<string, string> pushTokenCallback)
+        {
+            // @TODO Implement this for .NET iOS
+        }
+
+        public override void RegisterForPushToast (Action<string, string> pushTokenCallback)
+        {
+            // @TODO Implement this for .NET iOS
+        }
+
+        public override void RegisterForRawPush (Action<string, string> pushTokenCallback, Action<string> pushRecievedCallback)
+        {
+            // @TODO Implement this for .NET iOS
         }
 
         #endregion
@@ -1036,6 +1080,108 @@ namespace BuddySDK
                 a();
             }
         }
+
+        public override void RegisterForPushAlert(Action<string,string> pushTokenCallback)
+        {
+            //MPNS supports Toast, Tile, and Raw
+            throw new NotImplementedException();
+        }
+
+        public override void RegisterForPushBadge(Action<string,string> pushTokenCallback)
+        {
+            //For now, we'll use tile notifications as badges
+            throw new NotImplementedException();
+        }
+
+        public override void RegisterForPushToast(Action<string,string> pushTokenCallback)
+        {
+            Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> channelHandler
+                = new Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs>((sender, args) =>
+                {
+                    Task.Run(async () =>
+                    {
+                        SetUserSetting(PushChannelSettingName, args.ChannelUri.AbsoluteUri);
+                        //send channel to buddy
+                        await Buddy.Instance.UpdateDevice(args.ChannelUri.AbsoluteUri);
+                        //send channel to app
+                        pushTokenCallback(null, args.ChannelUri.AbsoluteUri);
+                    });
+                });
+            Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> errorHandler
+                = new Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>((sender, args) =>
+                {
+                    Task.Run(() =>
+                    {
+                        pushTokenCallback(args.Message, null);
+                    });
+                });
+
+            Microsoft.Phone.Notification.HttpNotificationChannel channel;
+            channel = Microsoft.Phone.Notification.HttpNotificationChannel.Find(PushChannelName);
+            if (channel == null)
+            {
+                channel = new Microsoft.Phone.Notification.HttpNotificationChannel(PushChannelName);
+                channel.Open();
+
+                channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
+                channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
+
+
+            }
+            else
+            {
+                channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
+                channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
+            }
+
+            if (!channel.IsShellToastBound)
+            {
+                channel.BindToShellToast();
+            }
+            string storedPushChannelName = GetUserSetting(PushChannelSettingName);
+            if(null != storedPushChannelName){
+                pushTokenCallback(null, storedPushChannelName);
+                Buddy.Instance.UpdateDevice(storedPushChannelName);
+            }
+        }
+
+
+        public override void RegisterForRawPush(Action<string, string> pushTokenCallback, Action<string> pushRecievedCallback)
+        {
+            Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> channelHandler
+                = new Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs>((sender, args) =>
+                    {
+                        Task.Run(async () =>
+                        {
+                            await Buddy.Instance.UpdateDevice(args.ChannelUri.AbsoluteUri);
+                            pushTokenCallback(null, args.ChannelUri.AbsoluteUri);
+                        });
+                    });
+            Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> errorHandler
+                = new Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>((sender, args) =>
+                {
+                    Task.Run(() =>
+                    {
+                        pushTokenCallback(args.Message, null);
+                    });
+                });
+            Action<object, Microsoft.Phone.Notification.HttpNotificationEventArgs> notificationHandler 
+                = new Action<object,Microsoft.Phone.Notification.HttpNotificationEventArgs>((sender,args) =>
+                {
+                    Task.Run(async () =>
+                    {
+                        if (args.Notification.Body.CanSeek)
+                        {
+                            args.Notification.Body.Seek(0, SeekOrigin.Begin);
+                        }
+                        StreamReader notificationReader = new System.IO.StreamReader(args.Notification.Body);
+                        pushRecievedCallback(await notificationReader.ReadToEndAsync());
+                        //pull off batch id and send to buddy
+
+                    });
+                });
+        }
+
     }
     #endif
 }
