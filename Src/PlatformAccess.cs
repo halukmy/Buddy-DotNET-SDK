@@ -1081,6 +1081,45 @@ namespace BuddySDK
             }
         }
 
+        private Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> GetChannelHandler(Action<string, string> pushTokenCallback)
+        {
+            return new Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs>((sender, args) =>
+            {
+                Task.Run(async () =>
+                {
+                    SetUserSetting(PushChannelSettingName, args.ChannelUri.AbsoluteUri);
+                    //send channel to buddy
+                    await Buddy.Instance.UpdateDevice(args.ChannelUri.AbsoluteUri);
+                    //send channel to app
+                    pushTokenCallback(null, args.ChannelUri.AbsoluteUri);
+                });
+            });
+        }
+
+        private Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> GetErrorHandler(Action<string, string> pushTokenCallback)
+        {
+            return new Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>((sender, args) =>
+            {
+                Task.Run(() =>
+                {
+                    pushTokenCallback(args.Message, null);
+                });
+            });
+        }
+
+        private Microsoft.Phone.Notification.HttpNotificationChannel GetOrFindChannel()
+        {
+            Microsoft.Phone.Notification.HttpNotificationChannel channel;
+            channel = Microsoft.Phone.Notification.HttpNotificationChannel.Find(PushChannelName);
+            if (channel == null)
+            {
+                channel = new Microsoft.Phone.Notification.HttpNotificationChannel(PushChannelName);
+                channel.Open();
+            }
+            return channel;
+
+        }
+
         public override void RegisterForPushAlert(Action<string,string> pushTokenCallback)
         {
             //MPNS supports Toast, Tile, and Raw
@@ -1089,50 +1128,39 @@ namespace BuddySDK
 
         public override void RegisterForPushBadge(Action<string,string> pushTokenCallback)
         {
-            //For now, we'll use tile notifications as badges
-            throw new NotImplementedException();
+            Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> channelHandler =
+                GetChannelHandler(pushTokenCallback);
+            Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> errorHandler =
+                GetErrorHandler(pushTokenCallback);
+
+            Microsoft.Phone.Notification.HttpNotificationChannel channel = GetOrFindChannel();
+            channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
+            channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
+            if (!channel.IsShellTileBound)
+            {
+                channel.BindToShellTile();
+            }
+
+            string storedPushChannelName = GetUserSetting(PushChannelSettingName);
+            if (null != storedPushChannelName)
+            {
+                pushTokenCallback(null, storedPushChannelName);
+                Buddy.Instance.UpdateDevice(storedPushChannelName);
+            }
+
         }
 
         public override void RegisterForPushToast(Action<string,string> pushTokenCallback)
         {
             Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> channelHandler
-                = new Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs>((sender, args) =>
-                {
-                    Task.Run(async () =>
-                    {
-                        SetUserSetting(PushChannelSettingName, args.ChannelUri.AbsoluteUri);
-                        //send channel to buddy
-                        await Buddy.Instance.UpdateDevice(args.ChannelUri.AbsoluteUri);
-                        //send channel to app
-                        pushTokenCallback(null, args.ChannelUri.AbsoluteUri);
-                    });
-                });
+                = GetChannelHandler(pushTokenCallback);
             Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> errorHandler
-                = new Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>((sender, args) =>
-                {
-                    Task.Run(() =>
-                    {
-                        pushTokenCallback(args.Message, null);
-                    });
-                });
+                = GetErrorHandler(pushTokenCallback);
 
-            Microsoft.Phone.Notification.HttpNotificationChannel channel;
-            channel = Microsoft.Phone.Notification.HttpNotificationChannel.Find(PushChannelName);
-            if (channel == null)
-            {
-                channel = new Microsoft.Phone.Notification.HttpNotificationChannel(PushChannelName);
-                channel.Open();
-
-                channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
-                channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
-
-
-            }
-            else
-            {
-                channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
-                channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
-            }
+            
+            Microsoft.Phone.Notification.HttpNotificationChannel channel = GetOrFindChannel();
+            channel.ChannelUriUpdated += new EventHandler<Microsoft.Phone.Notification.NotificationChannelUriEventArgs>(channelHandler);
+            channel.ErrorOccurred += new EventHandler<Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>(errorHandler);
 
             if (!channel.IsShellToastBound)
             {
@@ -1149,22 +1177,9 @@ namespace BuddySDK
         public override void RegisterForRawPush(Action<string, string> pushTokenCallback, Action<string> pushRecievedCallback)
         {
             Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs> channelHandler
-                = new Action<object, Microsoft.Phone.Notification.NotificationChannelUriEventArgs>((sender, args) =>
-                    {
-                        Task.Run(async () =>
-                        {
-                            await Buddy.Instance.UpdateDevice(args.ChannelUri.AbsoluteUri);
-                            pushTokenCallback(null, args.ChannelUri.AbsoluteUri);
-                        });
-                    });
+                = GetChannelHandler(pushTokenCallback);
             Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs> errorHandler
-                = new Action<object, Microsoft.Phone.Notification.NotificationChannelErrorEventArgs>((sender, args) =>
-                {
-                    Task.Run(() =>
-                    {
-                        pushTokenCallback(args.Message, null);
-                    });
-                });
+                = GetErrorHandler(pushTokenCallback);
             Action<object, Microsoft.Phone.Notification.HttpNotificationEventArgs> notificationHandler 
                 = new Action<object,Microsoft.Phone.Notification.HttpNotificationEventArgs>((sender,args) =>
                 {
