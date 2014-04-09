@@ -49,7 +49,6 @@ namespace BuddySDK
             EnsureID();
             var id = MetadataID;
 
-            
             var path = string.Format("/metadata/{0}", id);
 
             if (!string.IsNullOrEmpty(key))
@@ -61,70 +60,80 @@ namespace BuddySDK
         }
 
       
-        private Task<BuddyResult<bool>> SetMetadataCore(string key, object value, BuddyPermissions visibility = BuddyPermissions.Default)
+        private Task<BuddyResult<bool>> SetMetadataCore(string key, object value, BuddyPermissions? visibility = null)
         {
-            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(key), new
+            var callParams = new Dictionary<string, object>();
+            callParams[key] = value;
+
+            if (visibility != null)
             {
-                value = value,
-                visibility = visibility
-            });
+                callParams["visibility"] = visibility;
+            }
+
+            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(key),callParams);
         }
 
-        private Task<BuddyResult<bool>> SetMetadataCore(IDictionary<string, object> values, BuddyPermissions visiblity = BuddyPermissions.Default)
+        private Task<BuddyResult<bool>> SetMetadataCore(IDictionary<string, object> values, BuddyPermissions? visibility = null)
         {
-            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(), new
+            var callParams = new Dictionary<string, object>();
+            callParams["values"] = values;
+
+            if (visibility != null)
             {
-                values = values,
-                visibility = visiblity
-            });
+                callParams["visibility"] = visibility;
+            }
+
+            return Client.CallServiceMethod<bool>("PUT", GetMetadataPath(), callParams);
         }
 
-        public Task<BuddyResult<bool>> SetMetadataAsync(string key, object value, BuddyPermissions visibilty = BuddyPermissions.Default)
+        public Task<BuddyResult<bool>> SetMetadataAsync(string key, object value, BuddyPermissions? visibilty = null)
         {
             return SetMetadataCore(key, value, visibilty);
         }
 
-        public Task<BuddyResult<bool>> SetMetadataAsync(IDictionary<string, object> values, BuddyPermissions visibility = BuddyPermissions.Default)
+        public Task<BuddyResult<bool>> SetMetadataAsync(IDictionary<string, object> values, BuddyPermissions? visibility = null)
         {
             return SetMetadataCore(values, visibility);
         }
 
-
-
-        public Task<BuddyResult<object>> GetMetadataValueAsync(string key, BuddyPermissions visibility = BuddyPermissions.Default)
+        public Task<BuddyResult<object>> GetMetadataValueAsync(string key, BuddyPermissions? visibility = null)
         {
             return Task.Run<BuddyResult<object>>(() =>
             {
                 var t2 = GetMetadataItemAsync(key, visibility);
 
                 return t2.Result.Convert<object>(i => i == null ? null : i.Value);
-
-
             });
         }
 
-        public Task<BuddyResult<MetadataItem>> GetMetadataItemAsync(string key, BuddyPermissions visibility = BuddyPermissions.Default)
+        public Task<BuddyResult<MetadataItem>> GetMetadataItemAsync(string key, BuddyPermissions? visibility = null)
         {
             return Client.CallServiceMethod<MetadataItem>("GET", GetMetadataPath(key), new {visibility = visibility});
         }
 
-        public Task<BuddyResult<MetadataItem>> IncrementMetadataAsync(string key, double? delta = null, BuddyPermissions visibility = BuddyPermissions.Default)
+        public Task<BuddyResult<MetadataItem>> IncrementMetadataAsync(string key, double? delta = null, BuddyPermissions? visibility = null)
         {
             var path = GetMetadataPath(key) + "/increment";
+            var callParams = new Dictionary<string, object>();
+            callParams["delta"] = delta;
+            if (visibility != null)
+            {
+                callParams["visibility"] = visibility;
+            }
 
-            var r = Client.CallServiceMethod<MetadataItem>("POST", path,
-                     new
-                     {
-                         delta = delta,
-                         visibility = visibility
-                     });
-
+            var r = Client.CallServiceMethod<MetadataItem>("POST", path,callParams);
             return r;
         }
 
-        public Task<BuddyResult<bool>> DeleteMetadataAsync(string key, BuddyPermissions visibility = BuddyPermissions.Default)
+        public Task<BuddyResult<bool>> DeleteMetadataAsync(string key, BuddyPermissions? visibility = null)
         {
-            var t = Client.CallServiceMethod<bool>("DELETE", GetMetadataPath(key), new {visibility = visibility});
+            IDictionary<string, object> callParams = null;
+            if (visibility != null)
+            {
+                callParams["visibility"] = visibility;
+            }
+
+            var t = Client.CallServiceMethod<bool>("DELETE", GetMetadataPath(key), callParams);
 
             return t;
         }
