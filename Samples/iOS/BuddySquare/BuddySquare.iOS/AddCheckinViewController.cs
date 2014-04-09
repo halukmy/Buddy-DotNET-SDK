@@ -241,7 +241,7 @@ namespace BuddySquare.iOS
                     return;
                 }
 
-				var r = await Buddy.Locations.FindAsync (locationRange: new BuddyGeoLocationRange(_coords.Value.Latitude, _coords.Value.Longitude, 3000));
+                var r = await Buddy.Locations.FindAsync(locationRange: new BuddyGeoLocationRange(_coords.Value.Latitude,_coords.Value.Longitude, 3000));
 
                 if (r.IsSuccess) {
                     _locations = r.PageResults;

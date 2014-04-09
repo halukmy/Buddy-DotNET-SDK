@@ -30,7 +30,7 @@ namespace BuddySDK
             string faxNumber,
             string website,
             string category,
-            string defaultMetadata = null, 
+            string tag = null, 
             BuddyPermissions read = BuddyPermissions.User, 
             BuddyPermissions write = BuddyPermissions.User)
         {
@@ -49,7 +49,7 @@ namespace BuddySDK
                 FaxNumber = faxNumber,
                 PostalCode = postalCode,
                 Category = category,
-                DefaultMetadata = defaultMetadata,
+                Tag = tag,
                 Website = new Uri(website)
             };
 

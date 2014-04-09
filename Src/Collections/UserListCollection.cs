@@ -19,13 +19,13 @@ namespace BuddySDK
         }
 
         public async Task<BuddyResult<UserList>> AddAsync(string name,
-            BuddyGeoLocation location, string defaultMetadata = null, BuddyPermissions readPermissions = BuddyPermissions.User, BuddyPermissions writePermissions = BuddyPermissions.User)
+            BuddyGeoLocation location, string tag = null, BuddyPermissions readPermissions = BuddyPermissions.User, BuddyPermissions writePermissions = BuddyPermissions.User)
         {
             var c = new UserList(this.Client)
             {
                 Name = name,
                 Location = location,
-                DefaultMetadata = defaultMetadata,
+                Tag = tag,
                 ReadPermissions = readPermissions,
                 WritePermissions = writePermissions
             };

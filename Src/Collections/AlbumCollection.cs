@@ -19,14 +19,14 @@ namespace BuddySDK
         }
 
         public async Task<BuddyResult<Album>> AddAsync(string name, string caption,
-            BuddyGeoLocation location, string defaultMetadata = null, BuddyPermissions readPermissions = BuddyPermissions.User, BuddyPermissions writePermissions = BuddyPermissions.User)
+            BuddyGeoLocation location, string tag = null, BuddyPermissions readPermissions = BuddyPermissions.User, BuddyPermissions writePermissions = BuddyPermissions.User)
         {
             var c = new Album(this.Client)
             {
                 Name = name,
                 Caption = caption,
                 Location = location,
-                DefaultMetadata = defaultMetadata,
+                Tag = tag,
                 ReadPermissions = readPermissions,
                 WritePermissions = writePermissions
             };
