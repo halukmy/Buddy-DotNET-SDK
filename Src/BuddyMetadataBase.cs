@@ -108,7 +108,12 @@ namespace BuddySDK
 
         public Task<BuddyResult<MetadataItem>> GetMetadataItemAsync(string key, BuddyPermissions? visibility = null)
         {
-            return Client.CallServiceMethod<MetadataItem>("GET", GetMetadataPath(key), new {visibility = visibility});
+            var callParams = new Dictionary<string, object>();
+            if (visibility != null)
+            {
+                callParams["visibility"] = visibility;
+            }
+            return Client.CallServiceMethod<MetadataItem>("GET", GetMetadataPath(key), callParams);
         }
 
         public Task<BuddyResult<MetadataItem>> IncrementMetadataAsync(string key, double? delta = null, BuddyPermissions? visibility = null)
