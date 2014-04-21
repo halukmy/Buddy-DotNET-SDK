@@ -46,7 +46,7 @@ namespace BuddySDK
 
         public async Task<UserListItem> AddUserAsync(User user, BuddyGeoLocation location, string tag = null)
         {
-            var c = new UserListItem(this.GetObjectPath() + typeof(UserListItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, this.Client)
+            var c = new UserListItem(this.GetObjectPath() + PlatformAccess.GetCustomAttribute<BuddyObjectPathAttribute>(typeof(UserListItem)).Path, this.Client)
             {
                 UserID = user.ID,
                 Location = location,

@@ -112,7 +112,7 @@ namespace BuddySDK.BuddyServiceClient
             }
             else
             {
-                d = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+                d = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true));
                 if (parameters != null)
                 {
                     var props = parameters.GetType().GetProperties();

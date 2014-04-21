@@ -25,7 +25,7 @@ namespace BuddySDK
             {
                 if (_path == null)
                 {
-                    var attr = typeof(T).GetCustomAttribute<BuddyObjectPathAttribute>(true);
+                    var attr = PlatformAccess.GetCustomAttribute<BuddyObjectPathAttribute>(typeof(T));
                     if (attr != null)
                     {
                         _path = attr.Path;
@@ -61,7 +61,7 @@ namespace BuddySDK
         {
             return Task.Run<SearchResult<T>>(() =>
             {
-                    IDictionary<string,object> obj = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase){
+                    IDictionary<string,object> obj = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true)){
                         {"userID", userId},
                         {"created", created},
                         {"lastModified", lastModified},

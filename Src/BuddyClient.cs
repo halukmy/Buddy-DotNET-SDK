@@ -11,25 +11,13 @@ using BuddySDK.BuddyServiceClient;
 using System.Reflection;
 using System.Collections;
 using Newtonsoft.Json;
-
-
-#if WINDOWS_PHONE
-using System.Net;
-#else
-
-
-#endif
-using System.Xml.Linq;
 using System.Threading.Tasks;
-using System.IO;
-
 
 
 namespace BuddySDK
 {
 
-   
-    public class BuddyClient
+    public partial class BuddyClient
     {
 
         public event EventHandler<ServiceExceptionEventArgs> ServiceException;
@@ -59,6 +47,8 @@ namespace BuddySDK
             public DateTime? UserTokenExpires { get; set; }
             public string UserID {get;set;}
             public string LastUserID {get;set;}
+
+            public string DevicePushToken { get; set; }
 
             public AppSettings() {
 
@@ -194,7 +184,6 @@ namespace BuddySDK
                         priorId = "";
                     }
 
-
                     _appSettings.LastUserID = value.ID;
                     _appSettings.Save ();
 
@@ -253,17 +242,22 @@ namespace BuddySDK
         private AppSettings _appSettings;
         bool _userInitialized;
 
-        public BuddyClient(string appid, string appkey, BuddyClientFlags flags = BuddyClientFlags.Default)
+        public BuddyClient(string appid, string appkey, BuddyClientFlags flags = PlatformAccess.DefaultFlags)
         {
             if (String.IsNullOrEmpty(appid))
                 throw new ArgumentException("Can't be null or empty.", "appName");
             if (String.IsNullOrEmpty(appkey))
                 throw new ArgumentException("Can't be null or empty.", "AppKey");
 
+
+            if (!PlatformAccess.Current.SupportsFlags(flags))
+            {
+                throw new ArgumentException("Invalid flags for this client type.");
+            }
+
             this.AppId = appid.Trim();
             this.AppKey = appkey.Trim();
-            //this._flags = flags;
-
+            
             _appSettings = new AppSettings (appid, appkey);
 
 
@@ -281,6 +275,41 @@ namespace BuddySDK
 
                 if (LastLocationChanged != null) {
                     LastLocationChanged(this,e);
+                }
+            };
+
+
+            PlatformAccess.Current.SetPushToken(_appSettings.DevicePushToken);
+            PlatformAccess.Current.PushTokenChanged += (sender, args) =>
+            {
+                // update the token.
+                PlatformAccess.Current.GetPushTokenAsync().ContinueWith((t) =>
+                {
+                    if (t.Result != _appSettings.DevicePushToken)
+                    {
+                        _appSettings.DevicePushToken = t.Result;
+
+                        // if we have a device token, send up the new push token.
+                        if (_appSettings.DeviceToken != null)
+                        {
+                            this.UpdateDeviceAsync(_appSettings.DevicePushToken).ContinueWith((t2) =>
+                            {
+                                _appSettings.Save();
+                            });
+                        }
+                    }
+                });
+
+            };
+
+            PlatformAccess.Current.NotificationReceived += (s, na) => {
+
+                string id = null;
+
+                if (_appSettings.DeviceToken != null) {
+                    CallServiceMethod<bool>(
+                        "POST",
+                        "/notifications/recieved/" + id);
                 }
             };
             
@@ -329,6 +358,8 @@ namespace BuddySDK
         private async Task<string> GetDeviceToken()
         {
 
+           
+
             var dr = await CallServiceMethodHelper<DeviceRegistration, DeviceRegistration> (
                 "POST",
                 "/devices",
@@ -340,7 +371,8 @@ namespace BuddySDK
                     Platform = PlatformAccess.Current.Platform,
                     UniqueID = PlatformAccess.Current.DeviceUniqueId,
                     Model = PlatformAccess.Current.Model,
-                    OSVersion = PlatformAccess.Current.OSVersion
+                    OSVersion = PlatformAccess.Current.OSVersion,
+                    PushToken = await PlatformAccess.Current.GetPushTokenAsync()
                 },
                 completed: (r1, r2) => { 
                     if (r2.IsSuccess && r2.Value.ServiceRoot != null)
@@ -357,21 +389,37 @@ namespace BuddySDK
             if (!dr.IsSuccess) {
                 return null;
             }
+
+            
+
             return dr.Value.AccessToken;
         }
 
-
-
-        public async Task<bool> UpdateDevice(string devicePushToken, bool isProduction = true)
+ 
+       
+        public async Task<bool> UpdateDeviceAsync(string devicePushToken = null, bool? isProduction = true)
         {
+            var parameters = new Dictionary<string, object>();
+
+            if (devicePushToken != null)
+            {
+                parameters["pushToken"] = devicePushToken;
+            }
+
+            if (isProduction != null)
+            {
+                parameters["isProduction"] = isProduction.Value;
+            }
+
+            if (parameters.Count() == 0)
+            {
+                return false;
+            }
+
             BuddyResult<IDictionary<string, object>> result = await CallServiceMethodHelper<IDictionary<string, object>, IDictionary<string, object>>(
                 "PATCH",
                 "/devices/current",
-                new
-                {
-                    PushToken = devicePushToken,
-                    IsProduction = isProduction
-                });
+                parameters);
             return result.IsSuccess;
         }
 
@@ -422,8 +470,8 @@ namespace BuddySDK
             if (!_crashReportingSet) {
 
                 _crashReportingSet = true;
-                AppDomain.CurrentDomain.UnhandledException += (sender, e) => {
-                    var ex = e.ExceptionObject as Exception;
+                DotNetDeltas.UnhandledException += (sender, e) => {
+                    var ex = e.Exception as Exception;
 
                     // need to do this synchronously or the OS won't wait for us.
                     var t = AddCrashReportAsync (ex);
@@ -500,40 +548,51 @@ namespace BuddySDK
         }
 
 
-        internal async Task<BuddyResult<T2>> CallServiceMethodHelper<T1, T2>(
+        internal Task<BuddyResult<T2>> CallServiceMethodHelper<T1, T2>(
             string verb, 
             string path, 
             object parameters = null, 
             Func<T1, T2> map = null, 
             Action<BuddyResult<T1>, BuddyResult<T2>> completed = null) {
 
-            BuddyResult<T1> r1 = null;
-            BuddyResult<T2> r2 = null;
+            BuddyResult<T1> r1Result = null;
+            Task<BuddyResult<T2>> task;
 
             if (typeof(T1) == typeof(T2)) {
-                r2 = await CallServiceMethod<T2> (verb, path, parameters);
+                task = CallServiceMethod<T2>(verb, path, parameters);
             } else {
-                r1 = await CallServiceMethod<T1> (verb, path, parameters);
+                task = CallServiceMethod<T1>(verb, path, parameters).ContinueWith<BuddyResult<T2>>(r1 =>
+                {
+                    r1Result = r1.Result;
 
-               
-                if (map == null) {
-                    map = (t1) => {
-                        return (T2)(object)r1.Value;
-                    };
-                }
+                    if (map == null)
+                    {
+                        map = (t1) =>
+                        {
+                            return (T2)(object)t1;
+                        };
+                    }
 
-                r2 = r1.Convert<T2> (map);
-
+                    return r1Result.Convert<T2>(map);
+                });
             }
 
-            if (completed != null) {
-                PlatformAccess.Current.InvokeOnUiThread (() => completed (r1, r2));
-            }
-            return r2;
+            var tcs = new TaskCompletionSource<BuddyResult<T2>>();
+
+            task.ContinueWith(r2 =>
+                {
+                    if (completed == null)
+                    {
+                        tcs.SetResult(r2.Result);
+                    }
+                    else
+                    {
+                        PlatformAccess.Current.InvokeOnUiThread(() => { completed(r1Result, r2.Result); tcs.SetResult(r2.Result); });
+                    }
+                });
+
+            return tcs.Task;
         }
-
-      
-
      
 
         private void ClearCredentials(bool clearUser = true, bool clearDevice = true) {
@@ -575,7 +634,7 @@ namespace BuddySDK
 
                 this._service = BuddyServiceClientBase.CreateServiceClient(this, root);
 
-                this._service.ServiceException += async (object sender, ExceptionEventArgs e) =>
+                this._service.ServiceException += (object sender, ExceptionEventArgs e) =>
                 {
 
                     if (e.Exception is BuddyUnauthorizedException)
@@ -626,7 +685,8 @@ namespace BuddySDK
             {
                 // wait a bit and try again
                 //
-                Thread.Sleep(waitTime);
+                
+                DotNetDeltas.Sleep((int)waitTime.TotalMilliseconds);
                 await CheckConnectivity(waitTime);
             }
         }
@@ -1085,8 +1145,6 @@ namespace BuddySDK
             return Task.Run<BuddyResult<bool>> (() => {
                 if (ex == null) return new BuddyResult<bool>();
 
-
-
                 try {
                     var r = CallServiceMethod<string>(
                         "POST", 
@@ -1106,6 +1164,76 @@ namespace BuddySDK
             });
         }
 
+
+        protected Task SendPushNotificationAsyncCore(
+            IEnumerable<string> recipientUserIds,
+            string type,
+            string title = null,
+            string message = null,
+            int? counter = null,
+            string payload = null,
+            IDictionary<string, object> osCustomData = null)
+        {
+            var result = this.CallServiceMethod<IDictionary<string, object>>(
+                          "POST",
+                          "/notifications/" + type,
+                          new
+                          {
+                              title = title,
+                              message = message,
+                              counterValue = counter,
+                              payload = payload,
+                              osCustomData = osCustomData,
+                              recipients = recipientUserIds
+                          }
+              );
+
+            return result; 
+        }
+
+        //
+        // Push Notifications
+        //
+        public Task SendPushNotificationAsync(
+            IEnumerable<string> recipientUserIds, 
+            string title = null, 
+            string message = null, 
+            int? counter = null, 
+            string payload = null, 
+            IDictionary<string,object> osCustomData = null)
+        {
+
+            var pushType = PushNotificationType.Raw;
+
+            if (title != null  || message != null)
+            {
+                pushType = PushNotificationType.Alert;
+            }
+            else if (counter != null){
+                pushType = PushNotificationType.Badge;
+            }
+            else if (payload == null && osCustomData != null)
+            {
+                pushType = PushNotificationType.Custom;
+            }
+
+            string type = pushType.ToString().ToLowerInvariant();
+
+            return SendPushNotificationAsyncCore(
+                recipientUserIds,
+                type,
+                title,
+                message,
+                counter,
+                payload,
+                osCustomData);
+          
+        }
+
+        public void SetPushToken(string token) {
+
+            PlatformAccess.Current.SetPushToken (token);
+        }
     }
 
     public enum AuthenticationLevel {

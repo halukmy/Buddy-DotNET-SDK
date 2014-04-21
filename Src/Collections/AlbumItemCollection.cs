@@ -10,7 +10,7 @@ namespace BuddySDK
     public class AlbumItemCollection : BuddyCollectionBase<AlbumItem>
     {
         internal AlbumItemCollection(string parentObjectPath, BuddyClient client)
-            : base(parentObjectPath + typeof(AlbumItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, client)
+            : base(parentObjectPath + PlatformAccess.GetCustomAttribute<BuddyObjectPathAttribute>(typeof(AlbumItem)).Path, client)
         {
         }
 

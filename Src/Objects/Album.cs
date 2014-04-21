@@ -60,7 +60,7 @@ namespace BuddySDK
         public async Task<AlbumItem> AddItemAsync(string itemId, string caption, BuddyGeoLocation location, string tag = null)
 		{
 	
-			var c = new AlbumItem(this.GetObjectPath() + typeof(AlbumItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, this.Client)
+			var c = new AlbumItem(this.GetObjectPath() + PlatformAccess.GetCustomAttribute<BuddyObjectPathAttribute>(typeof(AlbumItem)).Path, this.Client)
 			{
 				ItemId = itemId,
                 Caption = caption,

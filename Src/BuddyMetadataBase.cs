@@ -141,7 +141,7 @@ namespace BuddySDK
            
             return Task.Run<SearchResult<MetadataItem>>(() =>
             {
-                IDictionary<string, object> obj = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase){
+                IDictionary<string, object> obj = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true)){
                         {"visibility", visibility},
                         {"created", created},
                         {"lastModified", lastModified},

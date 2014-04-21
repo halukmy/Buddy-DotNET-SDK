@@ -10,10 +10,11 @@ namespace BuddySDK
     [Flags]
     public enum BuddyClientFlags
     {
+        None              =  0,
         AutoTrackLocation =  0x00000001,
         AutoCrashReport =    0x00000002,
         AllowReinitialize =  0x00000004,
-        Default = AutoCrashReport | AutoTrackLocation
+        Default = AutoCrashReport | AutoTrackLocation,
     }
 
     public static class Buddy
@@ -146,6 +147,32 @@ namespace BuddySDK
             var t = Instance.SocialLoginUserAsync(identityProviderName, identityID, identityAccessToken);
 
             return t;
+        }
+
+        // 
+        // Push Notifications
+        //
+
+        public  static Task SendPushNotificationAsync(
+            IEnumerable<string> recipientUserIds, 
+            string title = null, 
+            string message = null, 
+            int? counter = null, 
+            string payload = null, 
+            IDictionary<string,object> osCustomData = null)
+        {
+            return Instance.SendPushNotificationAsync (
+                recipientUserIds,
+                title,
+                message,
+                counter,
+                payload,
+                osCustomData);
+        }
+
+        public static void SetPushToken(string token) {
+
+            Instance.SetPushToken (token);
         }
 
         // 

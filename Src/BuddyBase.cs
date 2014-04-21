@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -150,7 +150,7 @@ namespace BuddySDK
         {
             get
             {
-                var attr = this.GetType().GetCustomAttribute<BuddyObjectPathAttribute>(true);
+                var attr = this.GetType().GetCustomAttribute<BuddyObjectPathAttribute>();
                 if (attr == null)
                 {
                     throw new NotImplementedException("BuddyObjectPathAttribute required");
@@ -269,7 +269,7 @@ namespace BuddySDK
             }
         }
 
-        private IDictionary<string, ValueEntry> _values = new Dictionary<string, ValueEntry>(StringComparer.InvariantCultureIgnoreCase);
+        private IDictionary<string, ValueEntry> _values = new Dictionary<string, ValueEntry>(DotNetDeltas.InvariantComparer(true));
 
         protected T GetValueOrDefault<T>(string key, T defaultValue = default(T), bool autoPopulate = true)
         {
@@ -341,8 +341,11 @@ namespace BuddySDK
 		private Type GetEnumType<T>()
 		{
 			Type type = GetNonNullableType<T>();
-
-			return type.IsEnum ? type : null;
+#if NETFX_CORE
+            return System.Reflection.IntrospectionExtensions.GetTypeInfo(type).IsEnum ? type : null;
+#else
+            return type.IsEnum ? type : null;
+#endif
 		}
 		
 		private Type GetNonNullableType<T>()
@@ -352,7 +355,13 @@ namespace BuddySDK
 
 		private bool GetIsNullable<T>()
 		{
-			return typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition () == typeof(Nullable<>);
+            
+#if NETFX_CORE
+            var t = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(T));
+#else
+            var t = typeof(T);
+#endif
+			return t.IsGenericType && t.GetGenericTypeDefinition () == typeof(Nullable<>);
 		}
 
 		protected virtual void SetValueCore<T>(string key, T value)
@@ -397,7 +406,7 @@ namespace BuddySDK
             if (IsDirty || isNew)
             {
                 // gather dirty props.
-                var d = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+                var d = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true));
                 var mappings = EnsureMappings (this);
                 foreach (var kvp in _values)
                 {
@@ -468,7 +477,7 @@ namespace BuddySDK
                 throw new ArgumentException();
             }
 
-            var d = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            var d = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true));
             foreach (var kvp in other._values)
             {
                 d[kvp.Key] = kvp.Value.Value;
