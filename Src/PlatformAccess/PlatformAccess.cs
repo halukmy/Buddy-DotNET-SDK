@@ -16,7 +16,7 @@ namespace BuddySDK
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public abstract partial class PlatformAccess
     {
-        internal const string BuddyPushKey = "_BuddyBatchID";
+        internal const string BuddyPushKey = "_bId";
         private int? _uiThreadId;
      
         // device info
