@@ -86,7 +86,7 @@ namespace BuddySDK
 
         protected override Assembly EntryAssembly
         {
-	        get { return Assembly.GetEntryAssembly(); }
+            get { return Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly(); }
         }
 
         public override string AppVersion
@@ -145,8 +145,11 @@ namespace BuddySDK
         {
             return _settings.GetUserSetting(key);
         }
-      
 
+        public override string GetConfigSetting(string key)
+        {
+            return System.Configuration.ConfigurationManager.AppSettings[key];
+        }
 
         protected override void InvokeOnUiThreadCore(Action a)
         {
