@@ -428,7 +428,8 @@ namespace BuddySDK
 
             if (!_userInitialized) {
                 _userInitialized = true;
-                if (_appSettings.UserID != null && _appSettings.UserToken != null) {
+                if (_user == null && _appSettings.UserID != null && _appSettings.UserToken != null)
+                {
                     User = new AuthenticatedUser (_appSettings.UserID, _appSettings.UserToken, this);
                     return User;
                 }
