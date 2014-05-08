@@ -17,7 +17,7 @@ namespace BuddySDK
         Default = AutoCrashReport | AutoTrackLocation,
     }
 
-    public static class Buddy
+    public partial class Buddy
     {
         static BuddyClient _client;
         static Tuple<string, string, BuddyClientFlags> _creds;
@@ -153,7 +153,7 @@ namespace BuddySDK
         // Push Notifications
         //
 
-        public  static Task SendPushNotificationAsync(
+        public  static Task<BuddyResult<Notification>> SendPushNotificationAsync(
             IEnumerable<string> recipientUserIds, 
             string title = null, 
             string message = null, 

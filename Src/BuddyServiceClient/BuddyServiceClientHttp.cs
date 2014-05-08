@@ -473,7 +473,7 @@ namespace BuddySDK.BuddyServiceClient
                     callback(wex, null);
                 }
             };
-
+            
             try
             {
                 if (HttpRequestType.HttpGet == requestType)

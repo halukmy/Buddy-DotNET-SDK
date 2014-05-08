@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{088CDC91-2267-4001-8A45-2ABA07F4B39E}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -48,6 +48,7 @@
     <Reference Include="GCM.Client">
       <HintPath>..\Components\GCMClient-1.0\lib\android\GCM.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Android.Support.v4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="GcmBroadcastReciever.cs" />
     <Compile Include="PushActivity.cs" />
     <Compile Include="RecievedPush.cs" />
+    <Compile Include="LoginActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -68,6 +70,14 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\layout\Push.axml" />
+    <AndroidResource Include="Resources\layout\UserListItem.axml" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_action_chat.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_action_chat.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_action_chat.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_chat.png" />
+    <AndroidResource Include="Resources\layout\PushSendDialog.axml" />
+    <AndroidResource Include="Resources\layout\Login.axml" />
+    <AndroidResource Include="Resources\layout\ReceivedPush.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

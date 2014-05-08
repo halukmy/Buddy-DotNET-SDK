@@ -7,7 +7,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using PhoneApp5.Resources;
-
+using BuddySDK;
 namespace PhoneApp5
 {
     public partial class App : Application
@@ -17,6 +17,13 @@ namespace PhoneApp5
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
+
+
+        //public const string AppId = "bbbbbc.wdbbbmCPspnl";
+        //public const string AppKey = "35FEBA33-C5F1-46FC-9F67-8FCCE528FCBF";
+        public const string AppId = "bbbbbc.sDhbvlKNrBHl";
+        public const string AppKey = "4B82209C-108D-483F-9B41-CA006792FEAB";
+        public const string PushChannelName = "SamplePushChannel";
 
         /// <summary>
         /// Constructor for the Application object.
@@ -61,6 +68,14 @@ namespace PhoneApp5
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            try
+            {
+                Buddy.Init(AppId, AppKey, BuddyClientFlags.AutoCrashReport);
+            }
+            catch (InvalidOperationException)
+            {
+                //already initialized
+            }
         }
 
         // Code to execute when the application is activated (brought to foreground)

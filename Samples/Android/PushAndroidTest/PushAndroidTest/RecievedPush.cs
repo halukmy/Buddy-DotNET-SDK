@@ -17,8 +17,12 @@ namespace PushAndroidTest
         protected override void OnCreate (Bundle bundle)
         {
             base.OnCreate (bundle);
-
-            // Create your application here
+            SetContentView (Resource.Layout.ReceivedPush);
+            string pushedMessage = this.Intent.GetStringExtra ("pushedMessage");
+            TextView receivedMessage = FindViewById<TextView> (Resource.Id.receivedMessage);
+            if (null != pushedMessage) {
+                receivedMessage.Text = pushedMessage;
+            }
         }
     }
 }

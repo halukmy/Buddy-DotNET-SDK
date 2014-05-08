@@ -18,7 +18,7 @@ namespace PushAndroidTest
     {
         //IMPORTANT: Change this to your own Sender ID!
         //The SENDER_ID is your Google API Console App Project Number
-        public static string[] SENDER_IDS = new string[] {"YOUR_SENDER_ID"};
+        public static string[] SENDER_IDS = new string[] {"686582186015"};
     }
 }
 

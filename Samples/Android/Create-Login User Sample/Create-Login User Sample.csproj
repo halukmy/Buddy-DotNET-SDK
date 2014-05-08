@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{71038434-C2D9-49D6-A26A-6BC50F750EA8}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -66,11 +66,5 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Resources\layout\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Create-Login User Library\Create-Login User Library.csproj">
-      <Project>{34099653-F207-4C0C-A4EB-79AF2FEAACD0}</Project>
-      <Name>Create-Login User Library</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

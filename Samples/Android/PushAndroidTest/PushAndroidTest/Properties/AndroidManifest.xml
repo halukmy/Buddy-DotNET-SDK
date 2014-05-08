@@ -3,4 +3,6 @@
 	<uses-sdk />
 	<application android:label="PushAndroidTest">
 	</application>
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

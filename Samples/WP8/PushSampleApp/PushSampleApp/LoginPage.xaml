@@ -42,13 +42,17 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="Don't Push Me" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Image HorizontalAlignment="Left" Height="100" Margin="59,70,0,0" VerticalAlignment="Top" Width="100"/>
-            <RadioButton Content="RadioButton" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="10,0,14,0">
+            <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" FontSize="24"/>
+            <TextBox x:Name="UsernameInput" HorizontalAlignment="Left" Height="85" Margin="122,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="324"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,107,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" FontSize="24"/>
+            <PasswordBox x:Name="PasswordInput" HorizontalAlignment="Left" Margin="122,95,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.499" Width="324" Height="82"/>
+            <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Left" Margin="10,177,0,0" VerticalAlignment="Top" Width="436" Click="Button_Click"/>
+            <TextBlock x:Name="StatusMsg" HorizontalAlignment="Left" Margin="27,264,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.305,-0.63" Height="81" Width="405"/>
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

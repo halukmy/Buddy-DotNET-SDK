@@ -135,6 +135,7 @@
     <Compile Include="Collections\CheckinCollection.cs" />
     <Compile Include="Collections\LocationCollection.cs" />
     <Compile Include="Collections\MessageCollection.cs" />
+    <Compile Include="Collections\Notification.cs" />
     <Compile Include="Collections\PictureCollection.cs" />
     <Compile Include="Collections\UserCollection.cs" />
     <Compile Include="Collections\UserListCollection.cs" />

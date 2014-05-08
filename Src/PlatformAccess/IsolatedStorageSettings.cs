@@ -31,7 +31,7 @@ namespace BuddySDK
             }
 
             var d = new Dictionary<string, string>();
-            var parts = Regex.Match(existing, "(?<key>\\w*)=(?<value>.*?);");
+            var parts = Regex.Match(existing, "(?<key>[\\w\\.]*)=(?<value>.*?);");
 
             while (parts.Success)
             {

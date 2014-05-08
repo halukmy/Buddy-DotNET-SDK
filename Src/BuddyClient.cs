@@ -128,7 +128,7 @@ namespace BuddySDK
         private static string _WebServiceUrl;
         protected static string WebServiceUrl {
             get {
-                return _WebServiceUrl ?? "https://api.buddyplatform.com";
+                return _WebServiceUrl ?? "https://api.buddyplatform.com/";
             }
             set {
                 _WebServiceUrl = value;
@@ -240,7 +240,7 @@ namespace BuddySDK
         }
 
         private AppSettings _appSettings;
-        bool _userInitialized;
+        private bool _userInitialized = false;
 
         public BuddyClient(string appid, string appkey, BuddyClientFlags flags = PlatformAccess.DefaultFlags)
         {
@@ -304,12 +304,12 @@ namespace BuddySDK
 
             PlatformAccess.Current.NotificationReceived += (s, na) => {
 
-                string id = null;
+                string id = na.ID;
 
                 if (_appSettings.DeviceToken != null) {
                     CallServiceMethod<bool>(
                         "POST",
-                        "/notifications/recieved/" + id);
+                        "/notifications/received/" + id);
                 }
             };
             
@@ -460,7 +460,15 @@ namespace BuddySDK
         }
 
         private string GetRootUrl() {
-            string setting = PlatformAccess.Current.GetConfigSetting("RootUrl");
+            string setting = null;
+            try
+            {
+                 setting = PlatformAccess.Current.GetConfigSetting("RootUrl");
+            }
+            catch (NotImplementedException)
+            {
+                //platform doesn't provide config settings
+            }
             var userSetting = _appSettings.ServiceUrl;
             return userSetting ?? setting ?? WebServiceUrl;
         }
@@ -1165,18 +1173,17 @@ namespace BuddySDK
         }
 
 
-        protected Task SendPushNotificationAsyncCore(
+        protected Task<BuddyResult<Notification>> SendPushNotificationAsyncCore(
             IEnumerable<string> recipientUserIds,
-            string type,
             string title = null,
             string message = null,
             int? counter = null,
             string payload = null,
             IDictionary<string, object> osCustomData = null)
         {
-            var result = this.CallServiceMethod<IDictionary<string, object>>(
+            var result = this.CallServiceMethod<Notification>(
                           "POST",
-                          "/notifications/" + type,
+                "/notifications",
                           new
                           {
                               title = title,
@@ -1194,7 +1201,7 @@ namespace BuddySDK
         //
         // Push Notifications
         //
-        public Task SendPushNotificationAsync(
+        public Task<BuddyResult<Notification>> SendPushNotificationAsync(
             IEnumerable<string> recipientUserIds, 
             string title = null, 
             string message = null, 
@@ -1203,25 +1210,9 @@ namespace BuddySDK
             IDictionary<string,object> osCustomData = null)
         {
 
-            var pushType = PushNotificationType.Raw;
-
-            if (title != null  || message != null)
-            {
-                pushType = PushNotificationType.Alert;
-            }
-            else if (counter != null){
-                pushType = PushNotificationType.Badge;
-            }
-            else if (payload == null && osCustomData != null)
-            {
-                pushType = PushNotificationType.Custom;
-            }
-
-            string type = pushType.ToString().ToLowerInvariant();
 
             return SendPushNotificationAsyncCore(
                 recipientUserIds,
-                type,
                 title,
                 message,
                 counter,

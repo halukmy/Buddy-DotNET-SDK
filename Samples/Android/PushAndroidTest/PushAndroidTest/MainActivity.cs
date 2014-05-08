@@ -15,32 +15,10 @@ namespace PushAndroidTest
     public class MainActivity : Activity
     {
         int count = 1;
-        private const String APP_ID = "APP_ID";
-        private const String APP_KEY = "API_KEY"; 
+        private const String APP_ID = "bbbbbc.sDhbvlKNrBHl";
+        private const String APP_KEY = "4B82209C-108D-483F-9B41-CA006792FEAB"; 
 
-        private async void CreateBuddyUser(){
-            var userResult = await Buddy.Instance.CreateUserAsync (String.Format ("testAndroidUser{0}", System.Environment.TickCount), "apassword");
-            Android.App.AlertDialog dialog = new AlertDialog.Builder (this)
-                .SetTitle ("User Created")
-                .SetMessage (String.Format ("User {0} created", userResult.Value.ID))
-                .SetPositiveButton ("Sweet", (sender, args) => { return; })
-                .SetCancelable (true)
-                .Create ();
-            dialog.Show ();
-            RegisterForPushNotifications ();
-        }
-
-        private async void BuddyUserLogin(){
-            EditText username = FindViewById<EditText> (Resource.Id.username);
-            EditText password = FindViewById<EditText> (Resource.Id.password);
-            BuddyResult<AuthenticatedUser> user = await Buddy.Instance.LoginUserAsync (username.Text.Trim(), password.Text.Trim());
-            if (user.IsSuccess) {
-                RegisterForPushNotifications ();
-                NavigateToPush (user.Value);
-            }
-        }
-
-        private async void NavigateToPush(AuthenticatedUser user){
+        private void NavigateToPush(AuthenticatedUser user){
             Intent push = new Intent (this, typeof(PushActivity));
             push.PutExtra ("displayName", user.FirstName);
             push.PutExtra ("userId", user.ID);
@@ -61,20 +39,25 @@ namespace PushAndroidTest
 
             base.OnCreate (bundle);
             try{
-                Buddy.Init (APP_ID, APP_KEY);
+                Buddy.Init (APP_ID, APP_KEY, BuddyClientFlags.AutoCrashReport);
             } catch(InvalidOperationException){
                 //already intitialized
             }
             // Set our view from the "main" layout resource
             SetContentView (Resource.Layout.Main);
 
-            // Get our button from the layout resource,
-            // and attach an event to it
-            Button button = FindViewById<Button> (Resource.Id.myButton);
-            			
-            button.Click += delegate {
-                BuddyUserLogin();
+            Buddy.AuthorizationNeedsUserLogin += (object sender, EventArgs e) => {
+                Intent loginIntent = new Intent(this, typeof(LoginActivity));
+                StartActivity(loginIntent);
             };
+
+
+            if (null == Buddy.CurrentUser) {
+                Intent loginIntent = new Intent(this, typeof(LoginActivity));
+                StartActivity(loginIntent);
+                return;
+            }
+            NavigateToPush (Buddy.CurrentUser);
         }
     }
 }
