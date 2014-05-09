@@ -154,7 +154,7 @@ namespace BuddySDK
         {
             get
             {
-                return profilePicture == null ? null : profilePicture.SignedUrl;
+                return GetValueOrDefault<string>("ProfilePictureUrl");
             }
         }
 
@@ -163,6 +163,11 @@ namespace BuddySDK
         {
             get
             {
+                if (profilePicture == null || profilePicture.ID != ProfilePictureID || profilePicture.SignedUrl != ProfilePictureUrl)
+                {
+                    ProfilePicture = new Picture(ProfilePictureID, ProfilePictureUrl);
+                }
+
                 return profilePicture;
             }
             set
@@ -170,6 +175,7 @@ namespace BuddySDK
                 profilePicture = value;
 
                 SetValue<string>("ProfilePictureID", value == null ? null : value.ID, checkIsProp: false);
+                SetValue<string>("ProfilePictureUrl", value == null ? null : value.SignedUrl, checkIsProp: false);
             }
         }
 
@@ -182,20 +188,16 @@ namespace BuddySDK
         {
         }
 
-        public Task<BuddyResult<Picture>> AddProfilePictureAsync(string caption, Stream pictureData, string contentType, BuddyGeoLocation location = null, BuddyPermissions read = BuddyPermissions.User, BuddyPermissions write = BuddyPermissions.User)
+        public async Task<BuddyResult<Picture>> AddProfilePictureAsync(string caption, Stream pictureData, string contentType, BuddyGeoLocation location = null, BuddyPermissions read = BuddyPermissions.User, BuddyPermissions write = BuddyPermissions.User)
         {
-           var tr = PictureCollection.AddAsync(this.Client, caption, pictureData, contentType, location, read, write);
+           var result = await PictureCollection.AddAsync(this.Client, caption, pictureData, contentType, location, read, write);
 
+           if (result.IsSuccess)
+           {
+               ProfilePicture = result.Value;
+           }
 
-            tr.ContinueWith((t) => {
-
-                if (t.Result.IsSuccess) {
-                    ProfilePicture = t.Result.Value;
-                }
-            });
-        
-            return tr;
-
+           return result;
         }
 
         public override async Task<BuddyResult<bool>> FetchAsync(Action updateComplete = null)

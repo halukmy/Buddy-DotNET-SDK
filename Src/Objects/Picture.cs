@@ -1,12 +1,6 @@
-﻿
-using BuddySDK.BuddyServiceClient;
+﻿using BuddySDK.BuddyServiceClient;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BuddySDK
@@ -57,6 +51,12 @@ namespace BuddySDK
         public Picture(string id, BuddyClient client = null)
             : base(id, client)
         {
+        }
+
+        public Picture(string id, string signedUrl, BuddyClient client = null)
+            : this(id, client)
+        {
+            SetValue<string>("signedUrl", signedUrl, checkIsProp: false);
         }
 
         public Task<BuddyResult<Stream>> GetFileAsync(int? size = null)
