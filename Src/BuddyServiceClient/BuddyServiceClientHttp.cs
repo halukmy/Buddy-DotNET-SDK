@@ -246,7 +246,7 @@ namespace BuddySDK.BuddyServiceClient
                                 if (typeof(IDictionary<string,object>).IsAssignableFrom(typeof(T))) {
                                     object obj = envelope.result;
                                     IDictionary<string, object> d2 = (IDictionary<string, object>)obj;
-                                    obj = (obj == null) ? new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase) : new Dictionary<string, object>(d2, StringComparer.InvariantCultureIgnoreCase);
+                                    obj = (obj == null) ? new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true)) : new Dictionary<string, object>(d2, DotNetDeltas.InvariantComparer(true));
                                     envelope.result = (T)obj;
                                 }
                                 bcr.Result = envelope.result;
@@ -450,7 +450,7 @@ namespace BuddySDK.BuddyServiceClient
                             }
                         }
                     };
-#if WINRT
+#if NETFX_CORE
                     TimeSpan delay = TimeSpan.FromMilliseconds(TimeoutMilliseconds);
 
                     Windows.System.Threading.ThreadPoolTimer.CreateTimer(
@@ -473,7 +473,7 @@ namespace BuddySDK.BuddyServiceClient
                     callback(wex, null);
                 }
             };
-
+            
             try
             {
                 if (HttpRequestType.HttpGet == requestType)

@@ -70,7 +70,16 @@ namespace BuddySDK.BuddyServiceClient
         public static BuddyServiceClientBase CreateServiceClient(BuddySDK.BuddyClient client, string serviceRoot)
         {
             var type = typeof(BuddyServiceClientHttp);
-            var typeName = PlatformAccess.Current.GetConfigSetting("BuddyServiceClientType");
+            string typeName = null;
+
+            try
+            {
+                typeName = PlatformAccess.Current.GetConfigSetting("BuddyServiceClientType");
+            }
+            catch (NotImplementedException)
+            {
+                // platform access doesn't provide config settings
+            }
 
             if (typeName != null)
             {
@@ -112,7 +121,7 @@ namespace BuddySDK.BuddyServiceClient
             }
             else
             {
-                d = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+                d = new Dictionary<string, object>(DotNetDeltas.InvariantComparer(true));
                 if (parameters != null)
                 {
                     var props = parameters.GetType().GetProperties();

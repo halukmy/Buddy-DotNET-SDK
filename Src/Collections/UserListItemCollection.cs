@@ -10,7 +10,7 @@ namespace BuddySDK
     public class UserListItemCollection : BuddyCollectionBase<UserListItem>
     {
         internal UserListItemCollection(string parentObjectPath, BuddyClient client)
-            : base(parentObjectPath + typeof(UserListItem).GetCustomAttribute<BuddyObjectPathAttribute>(true).Path, client)
+            : base(parentObjectPath + PlatformAccess.GetCustomAttribute<BuddyObjectPathAttribute>(typeof(UserListItem)).Path, client)
         {
         }
 

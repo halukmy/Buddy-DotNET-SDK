@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <TextView
+            android:text="Welcome to Don't Push Me!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView1" />
+        <ListView
+            android:minWidth="25px"
+            android:minHeight="300px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userList" />
+        <Button
+            android:text="Push it to me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/push" />
+    </LinearLayout>
+</LinearLayout>
