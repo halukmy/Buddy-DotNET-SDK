@@ -132,6 +132,7 @@
     <Compile Include="Collections\UserCollection.cs" />
     <Compile Include="Objects\Message.cs" />
     <Compile Include="Objects\MessageType.cs" />
+    <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\UserList.cs" />
     <Compile Include="Objects\UserListItem.cs" />
     <Compile Include="AuthenticatedUser.cs">
