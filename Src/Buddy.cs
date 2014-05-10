@@ -119,7 +119,7 @@ namespace BuddySDK
         {
             if (_creds != null && !flags.HasFlag(BuddyClientFlags.AllowReinitialize))
             {
-                throw new InvalidOperationException("Already initalized.");
+                throw new InvalidOperationException("Already initialized.");
             }
             _creds = new Tuple<string, string, BuddyClientFlags>(appId, appKey, flags);
 
