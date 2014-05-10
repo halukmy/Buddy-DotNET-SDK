@@ -8,7 +8,7 @@ Please refer to [dev.buddy.com/docs](http://dev.buddy.com/docs) for more details
 
 Buddy enables developers to build engaging, cloud-connected apps without having to write, test, manage or scale server-side code or infrastructure. We noticed that most mobile app developers end up writing the same code over and over again: user management, photo management, geolocation checkins, metadata, and more.  
 
-Buddy created easy-to-use, scenario-focused APIs let you spend more time building your app, and less time worrying about backend infrastructure.  
+Buddy's easy-to-use, scenario-focused APIs let you spend more time building your app, and less time worrying about backend infrastructure.  
 
 Let us handle that stuff for you!
 
