@@ -115,7 +115,7 @@ namespace BuddySDK
             }
         }
 
-        public static void Init(string appId, string appKey, BuddyClientFlags flags = BuddyClientFlags.Default)
+        public static void Init(string appId, string appKey, BuddyClientFlags flags = PlatformAccess.DefaultFlags)
         {
             if (_creds != null && !flags.HasFlag(BuddyClientFlags.AllowReinitialize))
             {
