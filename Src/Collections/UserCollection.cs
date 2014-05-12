@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace BuddySDK
 {
@@ -32,19 +33,13 @@ namespace BuddySDK
 
         } 
 
-        public Task<BuddyResult<IEnumerable<User>>> FindByIdentitiesAsync(string identityProviderName, IEnumerable<string> identityIDs = null)
+        public Task<BuddyResult<IEnumerable<User>>> FindByIdentitiesAsync(string identityProviderName, string identityId = null)
         {
             return Task.Run<BuddyResult<IEnumerable<User>>>(() =>
             {
-                var r = Client.CallServiceMethod<IEnumerable<string>>("GET", Path + "/identities", new
-                        {
-                            IdentityProviderName = identityProviderName,
-                            IdentityIDs = identityIDs == null ? null : string.Join("\t", identityIDs)
-                        });
-
+                    var url = string.Format("{0}/identities/{1}/{2}", Path, Uri.EscapeDataString(identityProviderName), Uri.EscapeDataString(identityId));
+                    var r = Client.CallServiceMethod<IEnumerable<string>>("GET", url);
                     return r.Result.Convert(uids => uids.Select(uid => new User(uid, Client)));
-
-                
             });
 
         }

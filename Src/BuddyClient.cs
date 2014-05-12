@@ -49,6 +49,7 @@ namespace BuddySDK
             public string LastUserID {get;set;}
 
             public string DevicePushToken { get; set; }
+            public string AppVersion { get; set; }
 
             public AppSettings() {
 
@@ -242,7 +243,7 @@ namespace BuddySDK
         private AppSettings _appSettings;
         private bool _userInitialized = false;
 
-        public BuddyClient(string appid, string appkey, BuddyClientFlags flags = PlatformAccess.DefaultFlags)
+        public BuddyClient(string appid, string appkey, BuddyClientFlags flags = PlatformAccess.DefaultFlags, string appVersion = null)
         {
             if (String.IsNullOrEmpty(appid))
                 throw new ArgumentException("Can't be null or empty.", "appName");
@@ -259,7 +260,7 @@ namespace BuddySDK
             this.AppKey = appkey.Trim();
             
             _appSettings = new AppSettings (appid, appkey);
-
+            _appSettings.AppVersion = appVersion;
 
             UpdateAccessLevel();
 
@@ -372,7 +373,8 @@ namespace BuddySDK
                     UniqueID = PlatformAccess.Current.DeviceUniqueId,
                     Model = PlatformAccess.Current.Model,
                     OSVersion = PlatformAccess.Current.OSVersion,
-                    PushToken = await PlatformAccess.Current.GetPushTokenAsync()
+                    PushToken = await PlatformAccess.Current.GetPushTokenAsync(),
+                    AppVersion = _appSettings.AppVersion ?? PlatformAccess.Current.AppVersion
                 },
                 completed: (r1, r2) => { 
                     if (r2.IsSuccess && r2.Value.ServiceRoot != null)
@@ -960,6 +962,29 @@ namespace BuddySDK
         public Task<BuddyResult<bool>> LogoutUserAsync() {
             return LogoutInternal ();
            
+        }
+
+        public Task<BuddyResult<bool>> RequestPasswordResetAsync(string userName, string subject, string body) {
+            return this.CallServiceMethod<bool> (
+                "POST",
+                "/users/password",
+                new {
+                    userName = userName,
+                    subject = subject,
+                    body = body
+                });
+        }
+
+
+        public Task<BuddyResult<bool>> ResetPasswordAsync(string userName, string resetCode, string newPassword) {
+            return this.CallServiceMethod<bool> (
+                "PATCH",
+                "/users/password",
+                new {
+                    userName = userName,
+                    resetCode = resetCode,
+                    newPassword = newPassword
+                });
         }
 
       
