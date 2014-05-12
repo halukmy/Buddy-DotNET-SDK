@@ -17,7 +17,7 @@ namespace BuddySDK
         Default = AutoCrashReport | AutoTrackLocation,
     }
 
-    public static class Buddy
+    public static partial class Buddy
     {
         static BuddyClient _client;
         static Tuple<string, string, BuddyClientFlags> _creds;
