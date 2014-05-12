@@ -14,9 +14,9 @@ namespace PushAndroidTest
     [Activity (Label = "PushAndroidTest", MainLauncher = true)]
     public class MainActivity : Activity
     {
-        int count = 1;
-        private const String APP_ID = "bbbbbc.sDhbvlKNrBHl";
-        private const String APP_KEY = "4B82209C-108D-483F-9B41-CA006792FEAB"; 
+		// TODO: Go to http://dev.buddyplatform.com to get an app ID and app password.
+        private const String APP_ID = "";
+        private const String APP_KEY = ""; 
 
         private void NavigateToPush(AuthenticatedUser user){
             Intent push = new Intent (this, typeof(PushActivity));

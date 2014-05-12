@@ -26,8 +26,6 @@ namespace BuddySDK
                 PlatformAccess.Current.OnNotificationReceived (id.ToString());
             }
         }
-
-       
     }
 
     public partial class Buddy {
@@ -35,26 +33,19 @@ namespace BuddySDK
 
             Instance.RecordNotificationReceived (message);
         }
-
-       
     }
 
-
-      public abstract partial class PlatformAccess {
+	public abstract partial class PlatformAccess {
 
         public const BuddyClientFlags DefaultFlags = BuddyClientFlags.AutoCrashReport;
-
 
         internal static PlatformAccess CreatePlatformAccess() {
             return new IosPlatformAccess ();
         }
-
-       
     }
 
     internal class IosPlatformAccess : PlatformAccess
     {
-
         private NSObject invoker = new NSObject();
 
         public override string GetConfigSetting(string key)
@@ -78,9 +69,7 @@ namespace BuddySDK
 
         public override void ClearUserSetting(string key)
         {
-
             NSUserDefaults.StandardUserDefaults.RemoveObject(key);
-
         }
 
         public override string GetUserSetting(string key)

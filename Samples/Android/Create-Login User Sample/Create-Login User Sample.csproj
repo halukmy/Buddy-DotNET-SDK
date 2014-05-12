@@ -45,9 +45,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Buddy">
-      <HintPath>libs\Buddy.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -66,5 +63,15 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Resources\layout\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Create-Login User Library\Create-Login User Library.csproj">
+      <Project>{34099653-F207-4C0C-A4EB-79AF2FEAACD0}</Project>
+      <Name>Create-Login User Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Src\Buddy.Android.csproj">
+      <Project>{6051EF7E-1A39-4C5C-A06B-82A9A2B5304F}</Project>
+      <Name>Buddy.Android</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
