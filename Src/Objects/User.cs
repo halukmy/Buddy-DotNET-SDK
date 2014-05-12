@@ -22,12 +22,8 @@ namespace BuddySDK
     /// Represents a public user profile. Public user profiles are usually returned when looking at an AuthenticatedUser's friends or making a search with FindUser.
     /// <example>
     /// <code>
-    ///     BuddyClient client = new BuddyClient("APPNAME", "APPPASS");
-    ///     client.LoginAsync("username", "password", (user, state) => {
-    ///     
-    ///         // Return all users for this application.
-    ///         user.FindUserAsync((users, state2) => { });
-    ///     });
+    ///    
+    ///     var loggedInUser = await Buddy.LoginUserAsync("username", "password");
     /// </code>
     /// </example>
     /// </summary>
@@ -239,32 +235,6 @@ namespace BuddySDK
             });
         }
 
-        public Task<BuddyResult<bool>> AddIdentityAsync(string identityProviderName, string identityID)
-        {
-            return AddRemoveIdentityCoreAsync("POST", "/users/me/identities/" + Uri.EscapeDataString(identityProviderName), new
-                    {
-                        IdentityID = identityID
-                    });
-        }
-
-        public Task<BuddyResult<bool>> RemoveIdentityAsync(string identityProviderName, string identityID)
-        {
-            return AddRemoveIdentityCoreAsync("DELETE", "/user/me/identities/" + Uri.EscapeDataString(identityProviderName), new { IdentityID = identityID });
-        }
-
-        private Task<BuddyResult<bool>> AddRemoveIdentityCoreAsync(string verb, string path, object parameters)
-        {
-            return Task.Run<BuddyResult<bool>>(() =>
-            {
-                 var r = Client.CallServiceMethod<string>(verb, path, parameters);
-                 return r.Result.Convert(s  => r.Result.IsSuccess);
-            });
-           
-        }
-
-        public Task<BuddyResult<IEnumerable<string>>> GetIdentitiesAsync(string identityProviderName)
-        {
-            return Client.CallServiceMethod<IEnumerable<string>>("GET",  "/users/me/identities/" + Uri.EscapeDataString(identityProviderName));
-        }
+       
     }
 }

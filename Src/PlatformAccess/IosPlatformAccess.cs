@@ -27,14 +27,11 @@ namespace BuddySDK
             }
         }
 
-        public void SetPushToken(string token) {
-
-            PlatformAccess.Current.SetPushToken (token);
-        }
+       
     }
 
     public partial class Buddy {
-        public void RecordNotificationReceived(UILocalNotification message) {
+        public static void RecordNotificationReceived(UILocalNotification message) {
 
             Instance.RecordNotificationReceived (message);
         }

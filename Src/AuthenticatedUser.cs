@@ -6,7 +6,8 @@ using BuddySDK.BuddyServiceClient;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+
 
 namespace BuddySDK
 {
@@ -35,6 +36,35 @@ namespace BuddySDK
         public override string ToString ()
         {
             return base.ToString () + ", Email: " + this.Email;
+        }
+
+
+        public Task<BuddyResult<bool>> AddIdentityAsync(string identityProviderName, string identityID)
+        {
+            return AddRemoveIdentityCoreAsync("POST", "/users/me/identities/" + Uri.EscapeDataString(identityProviderName), new
+                {
+                    IdentityID = identityID
+                });
+        }
+
+        public Task<BuddyResult<bool>> RemoveIdentityAsync(string identityProviderName, string identityID)
+        {
+            return AddRemoveIdentityCoreAsync("DELETE", "/user/me/identities/" + Uri.EscapeDataString(identityProviderName), new { IdentityID = identityID });
+        }
+
+        private Task<BuddyResult<bool>> AddRemoveIdentityCoreAsync(string verb, string path, object parameters)
+        {
+            return Task.Run<BuddyResult<bool>>(() =>
+                {
+                    var r = Client.CallServiceMethod<string>(verb, path, parameters);
+                    return r.Result.Convert(s  => r.Result.IsSuccess);
+                });
+
+        }
+
+        public Task<BuddyResult<IEnumerable<string>>> GetIdentitiesAsync(string identityProviderName)
+        {
+            return Client.CallServiceMethod<IEnumerable<string>>("GET",  "/users/me/identities/" + Uri.EscapeDataString(identityProviderName));
         }
 
     }
