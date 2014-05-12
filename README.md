@@ -2,7 +2,7 @@
 
 These release notes are for the Buddy Platform .NET SDK.
 
-Please refer to [dev.buddy.com/docs](http://dev.buddy.com/docs) for more details on the .NET SDK.
+Please refer to [dev.buddyplatform.com/docs](http://dev.buddyplatform.com/docs) for more details on the .NET SDK.
 
 ## Introduction
 
@@ -22,17 +22,16 @@ For developers the Buddy Platform offers turnkey support for features like the f
 * *Push Notifications* - easily send push notifications to iOS, Android, or Microsoft devices.
 * *Messaging* - send messages to other users, create message groups.
 * *User Lists* - set up relationships between users.
-* *Game Scores, Metadata, and Boards* - Keep track of game scores and states for individual users as well as across users.
-* *And more* - Check out the rest of the offering at [buddy.com](http://buddy.com)
+* *Game Scores, Metadata, and Boards* - keep track of game scores and states for individual users as well as across users.
+* *And more* - check out the rest of the offering at [buddy.com](http://buddy.com)
 
 ## Getting Started
 
-To get started with the Buddy Platform SDK, please reference the "Getting Started" series of documents at [dev.buddy.com/docs](http://dev.buddy.com/docs). You will need an App ID and Key before you can use the SDK, and these documents will walk you through obtaining those, and installing the SDK.
+To get started with the Buddy Platform SDK, please reference the "Getting Started" series of documents at [dev.buddyplatform.com/docs](http://dev.buddyplatform.com/docs). You will need an App ID and Key before you can use the SDK, and these documents will walk you through obtaining those, and installing the SDK.
 
-App IDs and Keys can be obtained at the Buddy Developer Dashboard at [dev.buddy.com](http://dev.buddy.com).
+App IDs and Keys can be obtained at the Buddy Developer Dashboard at [dev.buddyplatform.com](http://dev.buddyplatform.com).
 
-Full documentation for Buddy's services are available at [dev.buddy.com/docs](http://dev.buddy.com/docs).
-
+Full documentation for Buddy's services are available at [dev.buddyplatform.com/docs](http://dev.buddyplatform.com/docs).
 
 ## Contributing Back: Pull Requests
 
@@ -45,11 +44,9 @@ To submit a change to the Buddy SDK please do the following:
 3. Before creating your pull request, please sync your repository to the current state of the parent repository: ```git pull origin master```
 4. Commit your changes, then [submit a pull request](https://help.github.com/articles/using-pull-requests) for just that commit
 
-
 ## License
 
 #### Copyright (C) 2014 Buddy Platform, Inc.
-
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this file except in compliance with the License. You may obtain a copy of
