@@ -241,16 +241,15 @@ namespace BuddySDK
 
         public Task<BuddyResult<bool>> AddIdentityAsync(string identityProviderName, string identityID)
         {
-            return AddRemoveIdentityCoreAsync("POST", GetObjectPath() + "/identities", new
+            return AddRemoveIdentityCoreAsync("POST", "/users/me/identities/" + Uri.EscapeDataString(identityProviderName), new
                     {
-                        IdentityProviderName = identityProviderName,
                         IdentityID = identityID
                     });
         }
 
         public Task<BuddyResult<bool>> RemoveIdentityAsync(string identityProviderName, string identityID)
         {
-            return AddRemoveIdentityCoreAsync("DELETE", GetObjectPath() + "/identities/" + identityProviderName, new { IdentityID = identityID });
+            return AddRemoveIdentityCoreAsync("DELETE", "/user/me/identities/" + Uri.EscapeDataString(identityProviderName), new { IdentityID = identityID });
         }
 
         private Task<BuddyResult<bool>> AddRemoveIdentityCoreAsync(string verb, string path, object parameters)
@@ -265,7 +264,7 @@ namespace BuddySDK
 
         public Task<BuddyResult<IEnumerable<string>>> GetIdentitiesAsync(string identityProviderName)
         {
-            return Client.CallServiceMethod<IEnumerable<string>>("GET", GetObjectPath() + "/identities/" + identityProviderName);
+            return Client.CallServiceMethod<IEnumerable<string>>("GET",  "/users/me/identities/" + Uri.EscapeDataString(identityProviderName));
         }
     }
 }

@@ -962,6 +962,29 @@ namespace BuddySDK
            
         }
 
+        public Task<BuddyResult<bool>> RequestPasswordResetAsync(string userName, string subject, string body) {
+            return this.CallServiceMethod<bool> (
+                "POST",
+                "/users/password",
+                new {
+                    userName = userName,
+                    subject = subject,
+                    body = body
+                });
+        }
+
+
+        public Task<BuddyResult<bool>> ResetPasswordAsync(string userName, string resetCode, string newPassword) {
+            return this.CallServiceMethod<bool> (
+                "PATCH",
+                "/users/password",
+                new {
+                    userName = userName,
+                    resetCode = resetCode,
+                    newPassword = newPassword
+                });
+        }
+
       
 
         private Metadata _appMetadata;
